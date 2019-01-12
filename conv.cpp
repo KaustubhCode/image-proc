@@ -1,7 +1,12 @@
 #include <iostream>
 using namespace std;
 
-void mult(int *mat, int *ker, int n, int m){
+void conv(int *mat, int *ker, int n, int m){
+
+	cout << *mat << endl;
+	cout << mat << endl;
+	cout << &mat << endl;
+
 	int ans[n-m+1][n-m+1];
 
 	int kerflip[m][m];
@@ -43,6 +48,7 @@ void mult(int *mat, int *ker, int n, int m){
 		cout << endl;
 	} 
 
+	// return (int *)ans;
 	return;
 }
 
@@ -61,6 +67,15 @@ int main(){
 	int ker2[1][1] = {{2}};
 
 
-	mult((int *)image,(int *)ker,6,3);
+	int *ans = conv((int *)image,(int *)ker,6,3);
+
+	// for (int i =0; i < 4; i++){
+	// 	for (int j = 0; j < 4; j++){
+	// 		cout << *(ans + i*4 + j);
+	// 		cout << " ";
+	// 	}
+	// 	cout << endl;
+	// }
+
 	return 0;
 }
