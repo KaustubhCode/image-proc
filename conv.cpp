@@ -18,13 +18,6 @@ float** conv_pad(void *mat, void *ker, int n, int m, int p, int s = 1){
 		ans[i] = new float[(n-m+2*p)/s + 1];
 	}
 
-
-	for (int i =0; i < m; i++){
-		for (int j = 0; j < m; j++){
-			kerflip[i][j] = (*p_ker)[m-i-1][m-j-1];
-		}
-	}
-
 	for (int i = 0; i < n+2*p; i++){
 		for (int j = 0; j < n + 2*p; j ++){
 			padimage[i][j] = 0;
@@ -42,7 +35,7 @@ float** conv_pad(void *mat, void *ker, int n, int m, int p, int s = 1){
 			int sum = 0;
 			for(int k = 0; k < m; k++){
 				for(int l = 0; l < m; l++){
-					sum = sum + padimage[i+k][j+l] * kerflip[k][l];
+					sum = sum + padimage[i+k][j+l] * (*p_ker)[m-k-1][m-l-1];
 				}
 			}
 			ans[i][j] = sum;
