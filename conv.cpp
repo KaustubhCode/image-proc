@@ -11,7 +11,7 @@ float** conv_pad(void *mat, void *ker, int n, int m, int p, int s = 1){
 	float** ans;
 
 	float padimage[(n+2*p)/s][(n+2*p)/s];
-		
+
 	ans = new float*[(n-m+2*p)/s + 1];
 	for (int i=0; i < n; i++){
 		ans[i] = new float[(n-m+2*p)/s + 1];
@@ -47,6 +47,52 @@ float** conv_pad(void *mat, void *ker, int n, int m, int p, int s = 1){
 
 float** conv(void *mat, void *ker, int n, int m, int s = 1){
 	return conv_pad(mat,ker,n,m,0);
+}
+
+float** maxPooling(void *mat, int n, int f, int s = 1){
+	float (*p_mat)[n][n] = (float (*)[n][n]) mat;
+	float** ans;
+
+	ans = new float*[n-f+ 1];
+	for (int i=0; i < n; i++){
+		ans[i] = new float[n-f + 1];
+	}
+
+	for (int i = 0; i < n-f + 1; i++){
+		for (int j = 0; j < n-f + 1; j++){
+			float max = (*p_mat)[i][j];
+			for (int k = 0; k < f; k++){
+				for (int l = 0; l < f; l++){
+					max = ((*p_mat)[i+k][j+l] > max) ? (*p_mat)[i+k][j+l] : max;
+				}
+			}
+			ans[i][j] = max;
+		}
+	}
+}
+
+float** avgPooling(void *mat, int n, int f, int s = 1){
+	float (*p_mat)[n][n] = (float (*)[n][n]) mat;
+	float** ans;
+
+	ans = new float*[n-f+ 1];
+	for (int i=0; i < n; i++){
+		ans[i] = new float[n-f + 1];
+	}
+
+	for (int i = 0; i < n-f + 1; i++){
+		for (int j = 0; j < n-f + 1; j++){
+			float sum = 0;
+			for (int k = 0; k < f; k++){
+				for (int l = 0; l < f; l++){
+					sum = sum + (*p_mat)[i+k][j+l];
+				}
+			}
+			ans[i][j] = sum/(f*f);
+		}
+	}
+
+	return ans;
 }
 
 
