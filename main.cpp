@@ -41,13 +41,25 @@ int main(int argc, char** argv)
 
   	if (argc > 5){
   		op_name = argv[1];
-  		if (!strcmp(op_name, "conv_pad_no_matrix")){	// STRING COMPARISON C++
-
-  		}else if(!strcmp(op_name, "conv_pad_no_vector")){
-
+  		if (!strcmp(op_name, "conv_no_pad_matrix")){
+  			if (argc != 6){
+	  			cout << "Incorrect Number of Arguments." << endl;
+	  			cout << "USAGE: " << endl << " ./conv.out operation [operation_arg] inp1_filename inp1_size inp2_filename inp2_size" << endl;
+				exit(0);
+  			}
+  		}else if(!strcmp(op_name, "conv_no_pad_vector")){
+  			if (argc != 6){
+	  			cout << "Incorrect Number of Arguments." << endl;
+	  			cout << "USAGE: " << endl << " ./conv.out operation [operation_arg] inp1_filename inp1_size inp2_filename inp2_size" << endl;
+				exit(0);
+  			}
   		}else if(!strcmp(op_name, "conv_with_padding")){
-  			if (argc == 6){
+  			if (argc == 7){
   				padsize = atoi(argv[2]);
+  			}else{
+	  			cout << "Incorrect Number of Arguments." << endl;
+	  			cout << "USAGE: " << endl << " ./conv.out operation [operation_arg] inp1_filename inp1_size inp2_filename inp2_size" << endl;
+				exit(0);
   			}
   		}else{
   			cout << "Undefined Operation Name: " << argv[1] << endl;
