@@ -64,7 +64,6 @@ void display(float** twoD,int n){
 	}
 }
 
-<<<<<<< HEAD
 int main(){
 	float image[6][6]={{3,0,1,2,7,4},
 					{1,5,8,9,3,1},
@@ -80,7 +79,6 @@ int main(){
 	float **convImage = conv(image,ker,6,3);
 
 	display(convImage, 4);
-=======
 // int main(){
 // 	int image[6][6]={{3,0,1,2,7,4},
 // 					{1,5,8,9,3,1},
@@ -105,7 +103,5 @@ int main(){
 // 	// 	}
 // 	// 	cout << endl;
 // 	// }
->>>>>>> 590d513dd6ea0986e0457c8c002ae9a8388e3779
-
 // 	return 0;
 // }
