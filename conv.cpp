@@ -69,6 +69,8 @@ float** maxPooling(void *mat, int n, int f, int s = 1){
 			ans[i][j] = max;
 		}
 	}
+
+	return ans;
 }
 
 float** avgPooling(void *mat, int n, int f, int s = 1){
