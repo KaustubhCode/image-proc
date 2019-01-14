@@ -3,22 +3,31 @@
 
 using namespace std;
 
-float** conv_pad(void *mat, void *ker, int n, int m, int p, int s){
+float** conv_pad(void *mat, void *ker, int n, int m, int p, int s = 1){
 	float (*p_mat)[n][n] = (float (*)[n][n]) mat;
 	float (*p_ker)[m][m] = (float (*)[m][m]) ker;
 
 	
 	float** ans;
+
 	float padimage[(n+2*p)/s][(n+2*p)/s];
 	float kerflip[m][m];
 	
 	ans = new float*[(n-m+2*p)/s + 1];
 	for (int i=0; i < n; i++){
-		ans[i] = new float[(n-m+2*p)/s + 1
+		ans[i] = new float[(n-m+2*p)/s + 1];
+	}
+
 
 	for (int i =0; i < m; i++){
 		for (int j = 0; j < m; j++){
 			kerflip[i][j] = (*p_ker)[m-i-1][m-j-1];
+		}
+	}
+
+	for (int i = 0; i < n+2*p; i++){
+		for (int j = 0; j < n + 2*p; j ++){
+			padimage[i][j] = 0;
 		}
 	}
 
@@ -41,14 +50,11 @@ float** conv_pad(void *mat, void *ker, int n, int m, int p, int s){
 	}
 
 	return ans;
-
-
 }
 
-float** conv(void *mat, void *ker, int n, int m, int s){
 
+float** conv(void *mat, void *ker, int n, int m, int s = 1){
 	return conv_pad(mat,ker,n,m,0);
-
 }
 
 
@@ -74,32 +80,7 @@ int main(){
 					{-1,0,1},
 					{-1,0,1}};
 
-	float **convImage = conv(image,ker,6,3,0);
+	float **convImage = conv_pad(image,ker,6,3,1);
 
-	display(convImage, 4);
-// int main(){
-// 	int image[6][6]={{3,0,1,2,7,4},
-// 					{1,5,8,9,3,1},
-// 					{2,7,2,5,1,3},
-// 					{0,1,3,1,7,8},
-// 					{4,2,1,6,2,8},
-// 					{2,4,5,2,3,9}};
-
-// 	int ker[3][3] ={{-1,0,1},
-// 					{-1,0,1},
-// 					{-1,0,1}};
-
-// 	int ker2[1][1] = {{2}};
-
-
-// 	int *ans = conv((int *)image,(int *)ker,6,3);
-
-// 	// for (int i =0; i < 4; i++){
-// 	// 	for (int j = 0; j < 4; j++){
-// 	// 		cout << *(ans + i*4 + j);
-// 	// 		cout << " ";
-// 	// 	}
-// 	// 	cout << endl;
-// 	// }
-// 	return 0;
-// }
+	display(convImage, 6);
+}
