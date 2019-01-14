@@ -9,12 +9,12 @@ CXXFLAGS = -Wall -g
 # ****************************************************
 # Targets needed to bring the executable up to date
 
-main: main.o conv.o
-	$(CXX) $(CXXFLAGS) -o main main.o conv.o
+main: main.o imgOp.o
+	$(CXX) $(CXXFLAGS) -o main main.o imgOp.o
 
 # The main.o target can be written more simply
 
-main.o: main.cpp conv.h
+main.o: main.cpp imgOp.h
 	$(CXX) $(CXXFLAGS) -c main.cpp
 
-conv.o: conv.h
+imgOp.o: imgOp.h
