@@ -3,19 +3,18 @@
 
 using namespace std;
 
-float** conv_pad(void *mat, void *ker, int n, int m, int p){
+float** conv_pad(void *mat, void *ker, int n, int m, int p, int s){
 	float (*p_mat)[n][n] = (float (*)[n][n]) mat;
 	float (*p_ker)[m][m] = (float (*)[m][m]) ker;
 
 	
 	float** ans;
-	float padimage[n+2*p][n+2*p];
+	float padimage[(n+2*p)/s][(n+2*p)/s];
 	float kerflip[m][m];
 	
-	ans = new float*[n-m+1+2*p];
+	ans = new float*[(n-m+2*p)/s + 1];
 	for (int i=0; i < n; i++){
-		ans[i] = new float[n-m+1+2*p];
-	}
+		ans[i] = new float[(n-m+2*p)/s + 1
 
 	for (int i =0; i < m; i++){
 		for (int j = 0; j < m; j++){
@@ -29,8 +28,8 @@ float** conv_pad(void *mat, void *ker, int n, int m, int p){
 		}
 	}
 
-	for(int i = 0; i < n-m+1; i++){
-		for(int j = 0; j < n-m+1; j++){
+	for(int i = 0; i < (n-m+2*p)/s + 1; i++){
+		for(int j = 0; j < (n-m+2*p)/s + 1; j++){
 			int sum = 0;
 			for(int k = 0; k < m; k++){
 				for(int l = 0; l < m; l++){
@@ -39,7 +38,6 @@ float** conv_pad(void *mat, void *ker, int n, int m, int p){
 			}
 			ans[i][j] = sum;
 		}
-
 	}
 
 	return ans;
@@ -47,7 +45,7 @@ float** conv_pad(void *mat, void *ker, int n, int m, int p){
 
 }
 
-float** conv(void *mat, void *ker, int n, int m){
+float** conv(void *mat, void *ker, int n, int m, int s){
 
 	return conv_pad(mat,ker,n,m,0);
 
@@ -76,7 +74,7 @@ int main(){
 					{-1,0,1},
 					{-1,0,1}};
 
-	float **convImage = conv(image,ker,6,3);
+	float **convImage = conv(image,ker,6,3,0);
 
 	display(convImage, 4);
 // int main(){
