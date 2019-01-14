@@ -11,8 +11,7 @@ float** conv_pad(void *mat, void *ker, int n, int m, int p, int s = 1){
 	float** ans;
 
 	float padimage[(n+2*p)/s][(n+2*p)/s];
-	float kerflip[m][m];
-	
+		
 	ans = new float*[(n-m+2*p)/s + 1];
 	for (int i=0; i < n; i++){
 		ans[i] = new float[(n-m+2*p)/s + 1];
