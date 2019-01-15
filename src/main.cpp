@@ -55,11 +55,15 @@ int main(int argc, char** argv)
             	}
             	exit(0);
             	break;
+            case 'v':
+            	cout << "image-proc Library: Version 1.0" << endl;
+      			exit(0);
+      			break;
             case '?':  
                 // cout << "unknown option: " << opt << endl; 
                 break;  
         }  
-    } 
+    }
 	op_name = argv[1];
 	op_no = -1;
 	for (int i=0; i<8; i++){
@@ -110,58 +114,6 @@ int main(int argc, char** argv)
     	}
     	exit(0);
 	}
-	/*
-  	if (argc > 5){
-  		
-  		if (op_no >= 1 && op_no <= 7){
-  			if (argc != 6){
-	  			cout << "Incorrect Number of Arguments." << endl << "USAGE: " << endl << " ./bin/main operation [operation_arg] inp1_filename inp1_size inp2_filename inp2_size" << endl;
-				exit(0);
-  			}
-  		}else if(op_no == 0){
-  			if (argc == 7){
-  				padsize = atoi(argv[2]);
-  			}else{
-	  			cout << "Incorrect Number of Arguments." << endl << "USAGE: " << endl << " ./bin/main operation [operation_arg] inp1_filename inp1_size inp2_filename inp2_size" << endl;
-				exit(0);
-  			}
-  		}else{
-  			cout << "Undefined Operation Name: " << argv[1] << endl;
-  			cout << "USAGE: " << endl << " ./bin/main operation [operation_arg] inp1_filename inp1_size inp2_filename inp2_size" << endl;
-			exit(0);
-  		}
-  		streamFile.open(fn_inp_1);
-  		if (!streamFile.good()){
-  			cout << "Input File 1 does not exist." << endl;
-  			exit(0);
-  		}
-  		streamFile.close();
-  		streamFile.open(fn_inp_2);
-  		if (!streamFile.good()){
-  			cout << "Input File 2 does not exist." << endl;
-  			exit(0);
-  		}
-  		streamFile.close();
-  		if (inp_1_size <= 0){
-  			cout << "Invalid Input Size of operand 1" << endl;
-  			exit(0);
-  		}
-  		if (inp_2_size <= 0){
-  			cout << "Invalid Input Size of operand 2" << endl;
-  			exit(0);
-  		}
-	  	// if (debug){
-		  // 	cout << "Filename of Input 1 = " << fn_inp_1 << endl;
-	  	// 	cout << "Filename of Input 1 = " << fn_inp_2 << endl;
-		  // 	cout << "Input Size of Input 1 = " << inp_1_size << endl;
-	  	// 	cout << "Input Size of Input 2 = " << inp_2_size << endl;
-	  	// }
-	}else{
-		cout << "Some arguments are missing." << endl;
-		cout << "USAGE:" << " ' ./bin/main operation [operation_arg] inp1_filename inp1_size inp2_filename inp2_size '" << endl;
-		exit(0);
-	}
-	*/
 
 	// Take Input
 	// Input 1
@@ -210,20 +162,6 @@ int main(int argc, char** argv)
 		    exit(0);
 		}
 	}
-
-	// Convolution Operation
-	float image[6][6]={{3,0,1,2,7,4},
-					{1,5,8,9,3,1},
-					{2,7,2,5,1,3},
-				 	{0,1,3,1,7,8},
-					{4,2,1,6,2,8},
-					{2,4,5,2,3,9}};
-
-	float ker[3][3] ={{-1,0,1},
-					{-1,0,1},
-					{-1,0,1}};
-
-	float vec3[3] = {2, 0, -2};
 
 	if (op_no == 0){
 		Matrix convImage = conv_pad(mat1,mat2,inp_1_size,inp_2_size,padsize);
