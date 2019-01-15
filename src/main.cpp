@@ -3,13 +3,17 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <string.h>
+#include <vector>
 #include "imgOp.h"
 using namespace std;
 
+typedef vector<float> Array;
+typedef vector<Array> Matrix;
+
 bool debug = true;
-char* fn_inp_1;
-char* fn_inp_2;
-char* op_name;
+string fn_inp_1;
+string fn_inp_2;
+string op_name;
 int op_no;
 int inp_1_size;
 int inp_2_size;
@@ -17,7 +21,7 @@ int padsize;
 int box_size;
 ifstream streamFile;
 
-char *operators[8] = {"conv_with_pad",
+string operators[8] = {"conv_with_pad",
 					"conv_without_pad",
 					"max_pool",
 					"avg_pool",
@@ -47,7 +51,7 @@ int main(int argc, char** argv)
 	op_name = argv[1];
 	op_no = -1;
 	for (int i=0; i<8; i++){
-		if (!strcmp(op_name, operators[i])){
+		if (!op_name.compare(operators[i])){
 			op_no = i;
 		}
 	}
@@ -145,10 +149,9 @@ int main(int argc, char** argv)
 	// Take Input
 	// Input 1
 
-	float mat1[inp_1_size][inp_1_size];
-	float mat2[inp_2_size][inp_2_size];
-	float vec1[inp_1_size];
-	float vec2[inp_2_size];
+	Matrix mat1(inp_1_size, Array(inp_1_size));
+	Matrix mat2(inp_2_size, Array(inp_2_size));
+	Array vec1(inp_1_size);
 	if (op_no >= 0 && op_no <= 5 ){
 		streamFile.open(fn_inp_1);
 		if (streamFile.good()) {
@@ -206,29 +209,29 @@ int main(int argc, char** argv)
 	float vec3[3] = {2, 0, -2};
 
 	if (op_no == 0){
-		float **convImage = conv_pad(image,ker,6,3,1);
-		display(convImage, inp_1_size - inp_2_size + 1 + 2*padsize);
+		Matrix convImage = conv_pad(mat1,mat2,inp_1_size,inp_2_size,padsize);
+		display(convImage);
 	}else if (op_no == 1){
-		float **convImage2 = conv(mat1,mat2,inp_1_size,inp_2_size,1);
-		display(convImage2, inp_1_size - inp_2_size + 1);
+		Matrix convImage2 = conv(mat1,mat2,inp_1_size,inp_2_size,1);
+		display(convImage2);
 	}else if (op_no == 2){
-		float **convImage2 = maxPooling(mat1, inp_1_size,box_size,1);
-		display(convImage2, inp_1_size - box_size + 1);
+		Matrix convImage2 = maxPooling(mat1, inp_1_size,box_size,1);
+		display(convImage2);
 	}else if (op_no == 3){
-		float **convImage2 = avgPooling(mat1, inp_1_size,box_size,1);
-		display(convImage2, inp_1_size - box_size + 1);
+		Matrix convImage2 = avgPooling(mat1, inp_1_size,box_size,1);
+		display(convImage2);
 	}else if (op_no == 4){
-		float **tanhimg = relu(mat1,inp_1_size);
-		display(tanhimg, inp_1_size);
+		Matrix reluimg = relu(mat1,inp_1_size);
+		display(reluimg);
 	}else if (op_no == 5){
-		float **tanhimg = tan_h(mat1,inp_1_size);
-		display(tanhimg, inp_1_size);
+		Matrix tanhimg = tan_h(mat1,inp_1_size);
+		display(tanhimg);
 	}else if (op_no == 6){
-		float *sigvec = sigmoid(vec1, inp_1_size);
-		display_vec(sigvec,inp_1_size);
+		Array sigvec = sigmoid(vec1, inp_1_size);
+		display_vec(sigvec);
 	}else if (op_no == 7){
-		float *softmax_vec = softmax(vec1, inp_1_size);
-		display_vec(softmax_vec,inp_1_size);	
+		Array softmax_vec = softmax(vec1, inp_1_size);
+		display_vec(softmax_vec);	
 	}
 	return 0;
 }

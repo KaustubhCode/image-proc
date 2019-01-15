@@ -4,223 +4,166 @@
 
 using namespace std;
 
+typedef vector<float> Array;
+typedef vector<Array> Matrix;
+
 // Convolution with padding (matrix)
-float** conv_pad(void *mat, void *ker, int n, int m, int p, int s = 1){
-	float (*p_mat)[n][n] = (float (*)[n][n]) mat;
-	float (*p_ker)[m][m] = (float (*)[m][m]) ker;
+Matrix conv_pad(Matrix mat, Matrix ker, int n, int m, int p, int s = 1){
 
-	
-	float** ans;
+    int newsz = n-m+2*p+1;
+    
+    Matrix ans(newsz, Array(newsz));
+    Matrix padimage(n+2*p, Array(n+2*p));
 
-	float padimage[(n+2*p)/s][(n+2*p)/s];
+    for (int i = 0; i < n+2*p; i++){
+        for (int j = 0; j < n+2*p; j ++){
+            padimage[i][j] = 0;
+        }
+    }
 
-	ans = new float*[(n-m+2*p)/s + 1];
-	for (int i=0; i < n; i++){
-		ans[i] = new float[(n-m+2*p)/s + 1];
-	}
+    for (int i = 0; i < n; i++){
+        for (int j = 0; j < n; j++){
+            padimage[p+i][p+j] = mat[i][j];
+        }
+    }
 
-	for (int i = 0; i < n+2*p; i++){
-		for (int j = 0; j < n + 2*p; j ++){
-			padimage[i][j] = 0;
-		}
-	}
+    for(int i = 0; i < (n-m+2*p)/s + 1; i++){
+        for(int j = 0; j < (n-m+2*p)/s + 1; j++){
+            int sum = 0;
+            for(int k = 0; k < m; k++){
+                for(int l = 0; l < m; l++){
+                    sum = sum + padimage[i+k][j+l] * ker[m-k-1][m-l-1];
+                }
+            }
+            ans[i][j] = sum;
+        }
+    }
 
-	for (int i = 0; i < n; i++){
-		for (int j = 0; j < n; j++){
-			padimage[p+i][p+j] = (*p_mat)[i][j];
-		}
-	}
-
-	for(int i = 0; i < (n-m+2*p)/s + 1; i++){
-		for(int j = 0; j < (n-m+2*p)/s + 1; j++){
-			int sum = 0;
-			for(int k = 0; k < m; k++){
-				for(int l = 0; l < m; l++){
-					sum = sum + padimage[i+k][j+l] * (*p_ker)[m-k-1][m-l-1];
-				}
-			}
-			ans[i][j] = sum;
-		}
-	}
-
-	return ans;
+    return ans;
 }
 
 // Convolution without padding (matrix)
-float** conv(void *mat, void *ker, int n, int m, int s = 1){
-	return conv_pad(mat,ker,n,m,0);
+Matrix conv(Matrix mat, Matrix ker, int n, int m, int s = 1){
+    return conv_pad(mat,ker,n,m,0);
 }
 
-float** maxPooling(void *mat, int n, int f, int s = 1){
-	float (*p_mat)[n][n] = (float (*)[n][n]) mat;
-	float** ans;
+Matrix maxPooling(Matrix mat, int n, int f, int s = 1){
 
-	ans = new float*[n-f+ 1];
-	for (int i=0; i < n; i++){
-		ans[i] = new float[n-f + 1];
-	}
+    int newsz = n-f+1;
+    Matrix ans(newsz,Array(newsz));
 
-	for (int i = 0; i < n-f + 1; i++){
-		for (int j = 0; j < n-f + 1; j++){
-			float max = (*p_mat)[i][j];
-			for (int k = 0; k < f; k++){
-				for (int l = 0; l < f; l++){
-					max = ((*p_mat)[i+k][j+l] > max) ? (*p_mat)[i+k][j+l] : max;
-				}
-			}
-			ans[i][j] = max;
-		}
-	}
+    for (int i = 0; i < n-f + 1; i++){
+        for (int j = 0; j < n-f + 1; j++){
+            float max = mat[i][j];
+            for (int k = 0; k < f; k++){
+                for (int l = 0; l < f; l++){
+                    max = (mat[i+k][j+l] > max) ? mat[i+k][j+l] : max;
+                }
+            }
+            ans[i][j] = max;
+        }
+    }
 
-	return ans;
+    return ans;
 }
 
-float** avgPooling(void *mat, int n, int f, int s = 1){
-	float (*p_mat)[n][n] = (float (*)[n][n]) mat;
-	float** ans;
+Matrix avgPooling(Matrix mat, int n, int f, int s = 1){
 
-	ans = new float*[n-f+ 1];
-	for (int i=0; i < n; i++){
-		ans[i] = new float[n-f + 1];
-	}
+    int newsz = n-f+1;
+    Matrix ans(newsz,Array(newsz));
 
-	for (int i = 0; i < n-f + 1; i++){
-		for (int j = 0; j < n-f + 1; j++){
-			float sum = 0;
-			for (int k = 0; k < f; k++){
-				for (int l = 0; l < f; l++){
-					sum = sum + (*p_mat)[i+k][j+l];
-				}
-			}
-			ans[i][j] = sum/(f*f);
-		}
-	}
+    for (int i = 0; i < n-f + 1; i++){
+        for (int j = 0; j < n-f + 1; j++){
+            float sum = 0;
+            for (int k = 0; k < f; k++){
+                for (int l = 0; l < f; l++){
+                    sum = sum + mat[i+k][j+l];
+                }
+            }
+            ans[i][j] = sum/(f*f);
+        }
+    }
 
-	return ans;
+    return ans;
 }
 
 // ReLu (matrix)
-float** relu(void *mat, int n){
-	float (*p_mat)[n][n] = (float (*)[n][n]) mat;
+Matrix relu(Matrix mat, int n){
 
-	float** ans;
-	
-	ans = new float*[n];
-	for (int i=0; i < n; i++){
-		ans[i] = new float[n];
-	}
+    Matrix ans(n,Array(n));
 
-	for (int i = 0; i < n; i++){
-		for (int j = 0; j < n; j++){
-			if ((*p_mat)[i][j] > 0){
-				ans[i][j] = (*p_mat)[i][j];
-			}else{
-				ans[i][j] = 0;
-			}
-		}
-	}
+    for (int i = 0; i < n; i++){
+        for (int j = 0; j < n; j++){
+            if (mat[i][j] > 0){
+                ans[i][j] = mat[i][j];
+            }else{
+                ans[i][j] = 0;
+            }
+        }
+    }
 
-	return ans;
+    return ans;
 }
 
 // tanh (matrix)
-float** tan_h(void *mat, int n){
-	float (*p_mat)[n][n] = (float (*)[n][n]) mat;
+Matrix tan_h(Matrix mat, int n){
 
-	float** ans;
-	
-	ans = new float*[n];
-	for (int i=0; i < n; i++){
-		ans[i] = new float[n];
-	}
+    Matrix ans(n,Array(n));
 
-	for (int i = 0; i < n; i++){
-		for (int j = 0; j < n; j++){
-			ans[i][j] = tanh((*p_mat)[i][j]);
-		}
-	}
+    for (int i = 0; i < n; i++){
+        for (int j = 0; j < n; j++){
+            ans[i][j] = tanh(mat[i][j]);
+        }
+    }
 
-	return ans;
+    return ans;
 }
 
 // Sigmoid (vector)
-float* sigmoid(void *mat, int n){
-	float (*p_mat)[n] = (float (*)[n]) mat;
+Array sigmoid(Array mat, int n){
 
-	float* ans;
-	
-	ans = new float[n];
+    Array ans(n);
 
-	for (int i = 0; i < n; i++){
-		ans[i] = 1/(1+exp(-((*p_mat)[i])));
-	}
+    for (int i = 0; i < n; i++){
+        ans[i] = 1/(1+exp(-(mat[i])));
+    }
 
-	return ans;
+    return ans;
 }
 
 // softmax (vector)
-float* softmax(void *mat, int n){
-	float (*p_mat)[n] = (float (*)[n]) mat;
+Array softmax(Array mat, int n){
+    
+    Array ans(n);
+    
+    float exp_sum = 0;
+    for (int i = 0; i < n; i++){
+        exp_sum = exp_sum + exp(mat[i]);
+    }
 
-	float* ans;
-	
-	float exp_sum = 0;
-	for (int i = 0; i < n; i++){
-		exp_sum = exp_sum + exp((*p_mat)[i]);
-	}
+    for (int i = 0; i < n; i++){
+        ans[i] = exp(mat[i])/exp_sum;
+    }
 
-	ans = new float[n];
-
-	for (int i = 0; i < n; i++){
-		ans[i] = exp((*p_mat)[i])/exp_sum;
-	}
-
-	return ans;
+    return ans;
 }
 
 // Display Matrix
-void display(float** twoD,int n){
-	for (int i = 0; i < n; i++ ){
-		for (int j = 0; j < n; j++){
-			cout << twoD[i][j];
-			cout << " ";
-		}
-		cout << endl;
-	}
+void display(Matrix twoD){
+    for (int i = 0; i < twoD.size(); i++ ){
+        for (int j = 0; j < twoD[0].size(); j++){
+            cout << twoD[i][j];
+            cout << " ";
+        }
+        cout << endl;
+    }
 }
 
 // Display Vector
-void display_vec(float* twoD,int n){
-	for (int i = 0; i < n; i++ ){
-		cout << twoD[i];
-		cout << " ";
-	}
-	cout << endl;
+void display_vec(Array oneD){
+    for (int i = 0; i < oneD.size(); i++ ){
+        cout << oneD[i];
+        cout << " ";
+    }
+    cout << endl;
 }
-
-/*
-int main(){
-	float image[6][6]={{3,0,1,2,7,4},
-					{1,5,8,9,3,1},
-					{2,7,2,5,1,3},
-				 	{0,1,3,1,7,8},
-					{4,2,1,6,2,8},
-					{2,4,5,2,3,9}};
-
-	float ker[3][3] ={{-1,0,1},
-					{-1,0,1},
-					{-1,0,1}};
-
-	float **convImage = conv_pad(image,ker,6,3,1);
-	display(convImage, 6);
-
-	float **tanhimg = tan_h(ker,3);
-	display(tanhimg, 3);
-
-	float *sigvec = sigmoid(vec1, 3);
-	display_vec(sigvec,3);
-
-	float *softmax_vec = softmax(vec1, 3);
-	display_vec(softmax_vec,3);
-}
-*/

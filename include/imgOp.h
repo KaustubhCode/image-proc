@@ -2,26 +2,31 @@
 #define IMGOP_H
 
 #include <iostream>
+#include <vector>
+using namespace std;
+
+typedef vector<float> Array;
+typedef vector<Array> Matrix;
 
 // Convolution with padding (matrix)
-float** conv_pad(void *mat, void *ker, int n, int m, int p, int s = 1);
+Matrix conv_pad(Matrix mat, Matrix ker, int n, int m, int p, int s = 1);
 // Convolution without padding (matrix)
-float** conv(void *mat, void *ker, int n, int m, int s = 1);
+Matrix conv(Matrix mat, Matrix ker, int n, int m, int s = 1);
 
-float** maxPooling(void *mat, int n, int f, int s = 1);
+Matrix maxPooling(Matrix mat, int n, int f, int s = 1);
 
-float** avgPooling(void *mat, int n, int f, int s = 1);
+Matrix avgPooling(Matrix mat, int n, int f, int s = 1);
 // ReLu (matrix)
-float** relu(void *mat, int n);
+Matrix relu(Matrix mat, int n);
 // tanh (matrix)
-float** tan_h(void *mat, int n);
+Matrix tan_h(Matrix mat, int n);
 // Sigmoid (vector)
-float* sigmoid(void *mat, int n);
+Array sigmoid(Array mat, int n);
 // softmax (vector)
-float* softmax(void *mat, int n);
+Array softmax(Array mat, int n);
 // Display Matrix
-void display(float** twoD,int n);
+void display(Matrix twoD);
 // Display Vector
-void display_vec(float* twoD,int n);
+void display_vec(Array twoD);
 
 #endif
