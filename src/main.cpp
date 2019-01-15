@@ -234,22 +234,22 @@ int main(int argc, char** argv)
 }
 
 /*
-0	./main operation pad_size inp1 inp1_size inp2 inp2_size
-1	./main operation inp1 inp1_size inp2 inp2_size
-2	./main operation inp1 inp1_size box_size
-3	./main operation inp1 inp1_size box_size
-4	./main operation inp1 inp1_size
-5	./main operation inp1 inp1_size
-6	./main operation inp1 inp1_size
-7	./main operation inp1 inp1_size
+0	./bin/main operation pad_size inp1 inp1_size inp2 inp2_size
+1	./bin/main operation inp1 inp1_size inp2 inp2_size
+2	./bin/main operation inp1 inp1_size box_size
+3	./bin/main operation inp1 inp1_size box_size
+4	./bin/main operation inp1 inp1_size
+5	./bin/main operation inp1 inp1_size
+6	./bin/main operation inp1 inp1_size
+7	./bin/main operation inp1 inp1_size
 
 
-./main conv_with_pad 1 matrix1.txt 6 matrix2.txt 3
-./main conv_without_pad matrix1.txt 6 matrix2.txt 3
-./main max_pool matrix1.txt 6 2
-./main avg_pool matrix1.txt 6 2
-./main relu matrix2.txt 3
-./main tanh matrix2.txt 3
-./main sigmoid vector1.txt 3
-./main softmax vector1.txt 3
+./bin/main conv_with_pad 1 matrix1.txt 6 matrix2.txt 3
+./bin/main conv_without_pad matrix1.txt 6 matrix2.txt 3
+./bin/main max_pool matrix1.txt 6 2
+./bin/main avg_pool matrix1.txt 6 2
+./bin/main relu matrix2.txt 3
+./bin/main tanh matrix2.txt 3
+./bin/main sigmoid vector1.txt 3
+./bin/main softmax vector1.txt 3
 */
