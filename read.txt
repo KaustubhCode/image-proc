@@ -1,2 +1,0 @@
-Main
-	-g++ conv.cpp -o conv.out -l boost_program_options
