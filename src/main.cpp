@@ -34,13 +34,25 @@ string operators[8] = {"conv_with_pad",
 int main(int argc, char** argv)
 {
 	// Parsing Arguments
+	if (argc == 1){
+    	cout << "Invalid usage." << endl << endl << "USAGE:" << endl << "    ./bin/main operation [operation_arg] inp1_filename inp1_size [inp2_filename inp2_size] [other_args]" << endl << endl;
+    	cout << "Valid operations are " << endl;
+    	for (int i=0; i<8; i++){
+    		cout << "    " << operators[i] << endl;
+    	}
+    	exit(0);
+	}
 	char opt;
 	while((opt = getopt(argc, argv, ":h")) != -1)  
     {  
         switch(opt)  
         {  
             case 'h':
-            	cout << "USAGE: ./main operation [operation_arg] inp1_filename inp1_size inp2_filename inp2_size" << endl;
+            	cout << "USAGE:" << endl << "    ./bin/main operation [operation_arg] inp1_filename inp1_size inp2_filename inp2_size" << endl << endl;
+            	cout << "Valid operations are " << endl;
+            	for (int i=0; i<8; i++){
+            		cout << "    " << operators[i] << endl;
+            	}
             	exit(0);
             	break;
             case '?':  
@@ -58,7 +70,7 @@ int main(int argc, char** argv)
 
 	if (op_no == 0){
 		if (argc != 7){
-			cout << "Incorrect Number of Arguments." << endl << "USAGE: " << endl << " ./main operation [operation_arg] inp1_filename inp1_size inp2_filename inp2_size" << endl;
+			cout << "Incorrect Number of Arguments." << endl << "USAGE: " << endl << "    ./bin/main conv_with_pad pad_size inp1_filename inp1_size inp2_filename inp2_size" << endl;
 			exit(0);
 		}
 		padsize = atoi(argv[2]);
@@ -68,7 +80,7 @@ int main(int argc, char** argv)
   		inp_2_size = atoi(argv[6]);
 	}else if (op_no == 1){
 		if (argc != 6){
-			cout << "Incorrect Number of Arguments." << endl << "USAGE: " << endl << " ./main operation [operation_arg] inp1_filename inp1_size inp2_filename inp2_size" << endl;
+			cout << "Incorrect Number of Arguments." << endl << "USAGE: " << endl << "    ./bin/main conv_without_pad inp1_filename inp1_size inp2_filename inp2_size" << endl;
 			exit(0);
 		}
 	  	fn_inp_1 = argv[2];
@@ -77,7 +89,7 @@ int main(int argc, char** argv)
   		inp_2_size = atoi(argv[5]);
 	}else if (op_no >= 2 && op_no <= 3){
 		if (argc != 5){
-			cout << "Incorrect Number of Arguments." << endl << "USAGE: " << endl << " ./main operation [operation_arg] inp1_filename inp1_size inp2_filename inp2_size" << endl;
+			cout << "Incorrect Number of Arguments." << endl << "USAGE: " << endl << "    ./bin/main " << op_name << " inp1_filename inp1_size box_size" << endl;
 			exit(0);
 		}
 	  	fn_inp_1 = argv[2];
@@ -85,32 +97,37 @@ int main(int argc, char** argv)
   		box_size = atoi(argv[4]);
 	}else if (op_no >= 4 && op_no <= 7){
 		if (argc != 4){
-			cout << "Incorrect Number of Arguments." << endl << "USAGE: " << endl << " ./main operation [operation_arg] inp1_filename inp1_size inp2_filename inp2_size" << endl;
+			cout << "Incorrect Number of Arguments." << endl << "USAGE: " << endl << "    ./bin/main " << op_name << " inp1_filename inp1_size" << endl;
 			exit(0);
 		}
 	  	fn_inp_1 = argv[2];
   		inp_1_size = atoi(argv[3]);
 	}else{
-
+    	cout << "Invalid usage." << endl << endl << "USAGE:" << endl << "    ./bin/main operation [operation_arg] inp1_filename inp1_size inp2_filename inp2_size" << endl << endl;
+    	cout << "Valid operations are " << endl;
+    	for (int i=0; i<8; i++){
+    		cout << "    " << operators[i] << endl;
+    	}
+    	exit(0);
 	}
 	/*
   	if (argc > 5){
   		
   		if (op_no >= 1 && op_no <= 7){
   			if (argc != 6){
-	  			cout << "Incorrect Number of Arguments." << endl << "USAGE: " << endl << " ./main operation [operation_arg] inp1_filename inp1_size inp2_filename inp2_size" << endl;
+	  			cout << "Incorrect Number of Arguments." << endl << "USAGE: " << endl << " ./bin/main operation [operation_arg] inp1_filename inp1_size inp2_filename inp2_size" << endl;
 				exit(0);
   			}
   		}else if(op_no == 0){
   			if (argc == 7){
   				padsize = atoi(argv[2]);
   			}else{
-	  			cout << "Incorrect Number of Arguments." << endl << "USAGE: " << endl << " ./main operation [operation_arg] inp1_filename inp1_size inp2_filename inp2_size" << endl;
+	  			cout << "Incorrect Number of Arguments." << endl << "USAGE: " << endl << " ./bin/main operation [operation_arg] inp1_filename inp1_size inp2_filename inp2_size" << endl;
 				exit(0);
   			}
   		}else{
   			cout << "Undefined Operation Name: " << argv[1] << endl;
-  			cout << "USAGE: " << endl << " ./main operation [operation_arg] inp1_filename inp1_size inp2_filename inp2_size" << endl;
+  			cout << "USAGE: " << endl << " ./bin/main operation [operation_arg] inp1_filename inp1_size inp2_filename inp2_size" << endl;
 			exit(0);
   		}
   		streamFile.open(fn_inp_1);
@@ -141,7 +158,7 @@ int main(int argc, char** argv)
 	  	// }
 	}else{
 		cout << "Some arguments are missing." << endl;
-		cout << "USAGE:" << " ' ./main operation [operation_arg] inp1_filename inp1_size inp2_filename inp2_size '" << endl;
+		cout << "USAGE:" << " ' ./bin/main operation [operation_arg] inp1_filename inp1_size inp2_filename inp2_size '" << endl;
 		exit(0);
 	}
 	*/
@@ -162,7 +179,7 @@ int main(int argc, char** argv)
 			}
 			streamFile.close();
 		}else {
-		    cout << "Error!";
+		    cout << "Error: Input File 1 Not Found." << endl;
 		    exit(0);
 		}
 		if (op_no <= 1){
@@ -177,7 +194,7 @@ int main(int argc, char** argv)
 				streamFile.close();
 				// Display the numbers read:
 			}else {
-			    cout << "Error!";
+			    cout << "Error: Input File 2 Not Found." << endl;
 			    exit(0);
 			}
 		}
@@ -189,7 +206,7 @@ int main(int argc, char** argv)
 			}
 			streamFile.close();
 		}else {
-		    cout << "Error! Here";
+		    cout << "Error: Input File 1 Not Found." << endl;
 		    exit(0);
 		}
 	}
