@@ -10,7 +10,7 @@ typedef vector<Array> Matrix;
 // Convolution with padding (matrix)
 Matrix conv_pad(Matrix mat, Matrix ker, int n, int m, int p, int s = 1){
 
-    int newsz = (n-m+2*p)/s+1;
+    int newsz = (n-m+2*p)/s +1;
     
     Matrix ans(newsz, Array(newsz));
     Matrix padimage(n+2*p, Array(n+2*p));
@@ -41,39 +41,39 @@ Matrix conv(Matrix mat, Matrix ker, int n, int m, int s = 1){
     return conv_pad(mat,ker,n,m,0,s);
 }
 
-// Matrix conv_mult_pad(Matrix mat, Matrix ker, int n, int m, int p, int s = 1){
-//     int newsz = n-m+2*p+1;
-//     int n_pad = n+2*p;
-//     Matrix ans(newsz, Array(newsz));
-//     Matrix padimage(n_pad, Array(n_pad));
+Matrix conv_mult_pad(Matrix mat, Matrix ker, int n, int m, int p, int s = 1){
+    int newsz = n-m+2*p+1;
+    int n_pad = n+2*p;
+    Matrix ans(newsz, Array(newsz));
+    Matrix padimage(n_pad, Array(n_pad));
 
-//     for (int i = 0; i < n; i++){
-//         for (int j = 0; j < n; j++){
-//             padimage[p+i][p+j] = mat[i][j];
-//         }
-//     }
+    for (int i = 0; i < n; i++){
+        for (int j = 0; j < n; j++){
+            padimage[p+i][p+j] = mat[i][j];
+        }
+    }
 
-//     Matrix proc_image((n_pad-m+1)*(n_pad-m+1), Array(m*m));
+    Matrix proc_image((n_pad-m+1)*(n_pad-m+1), Array(m*m));
 
-//     for(int i = 0; i < n_pad-m+1; i++){
-//         for(int j = 0; j < n_pad-m+1; j++){
-//             for(int k = 0; k < m; k++){
-//                 for(int l = 0; l < m; l++){
-//                     proc_image[i+j][k+l] = padimage[i+k][j+l];
-//                 }
-//             }
-//         }
-//     }
+    for(int i = 0; i < n_pad-m+1; i++){
+        for(int j = 0; j < n_pad-m+1; j++){
+            for(int k = 0; k < m; k++){
+                for(int l = 0; l < m; l++){
+                    proc_image[i+j][k+l] = padimage[i+k][j+l];
+                }
+            }
+        }
+    }
 
-//     Array proc__ker(m*m);
-//     for(int k = 0; k < m; k++){
-//         for(int l = 0; l < m; l++){
-//             proc_ker[k+l] = ker[m-l-1][m-k-1];
-//         }
-//     }
+    Array proc__ker(m*m);
+    for(int k = 0; k < m; k++){
+        for(int l = 0; l < m; l++){
+            proc_ker[k+l] = ker[m-l-1][m-k-1];
+        }
+    }
 
 
-// }
+}
 
 // Matrix conv_mult(Matrix mat, Matrix ker, int n, int m, int s = 1){
 //     return conv_mult_pad(mat,ker,n,m,0);

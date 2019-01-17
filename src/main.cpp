@@ -115,6 +115,26 @@ int main(int argc, char** argv)
     	exit(0);
 	}
 
+	if (inp_1_size != null){
+		if (inp_1_size <= 0){
+    		cout << "Invalid usage: Input 1 size should be positive" << endl;
+    		exit(0);
+   		}
+	}
+	if (inp_2_size != null){
+		if (inp_2_size <= 0){
+    		cout << "Invalid usage: Input 2 size should be positive" << endl;
+    		exit(0);
+   		}
+	}
+
+	if (inp_1_size != null && inp_2_size != null){
+		if (inp_2_size > inp_1_size){
+    		cout << "Invalid usage: Kernel/Filter size cannot be greater than image size" << endl;
+    		exit(0);
+   		}
+	}
+
 	// Take Input
 	// Input 1
 
