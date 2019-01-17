@@ -120,7 +120,7 @@ int main(int argc, char** argv)
     	exit(0);
 	}
 
-	if (op_no <= 3 && op_no >= 0){
+	if (op_no <= 1 && op_no >= 0){
 		if (inp_2_size <= 0){
     		cout << "Invalid usage: Input 2 size should be positive" << endl;
     		exit(0);
@@ -140,10 +140,22 @@ int main(int argc, char** argv)
 	if (op_no >= 0 && op_no <= 5 ){
 		streamFile.open(fn_inp_1);
 		if (streamFile.good()) {
-			for (int i=0; i<inp_1_size; i++){
-				for (int j=0; j<inp_1_size; j++){
-					streamFile >> mat1[j][i];
+			int i=0, j=-1;
+			while (streamFile.peek() != EOF){
+				if (j < inp_1_size - 1){
+					j++;
+				}else if (i < inp_1_size - 1){
+					j=0;
+					i++;
+				}else{
+					cout << "Invalid size of file 1. Input size smaller than real size of file." << endl;
+					exit(0);
 				}
+				streamFile >> mat1[j][i];
+			}
+			if (i != inp_1_size - 1 || j != inp_1_size - 1){
+				cout << "Invalid size of file 1. Input size larger than real size of file." << endl;
+				exit(0);
 			}
 			streamFile.close();
 		}else {
@@ -154,13 +166,24 @@ int main(int argc, char** argv)
 			// Input 2
 			streamFile.open(fn_inp_2);
 			if (streamFile.good()) {
-				for (int i=0; i<inp_2_size; i++){
-					for (int j=0; j<inp_2_size; j++){
-						streamFile >> mat2[j][i];
+				int i=0, j=-1;
+				while (streamFile.peek() != EOF){
+					if (j < inp_2_size - 1){
+						j++;
+					}else if (i < inp_2_size - 1){
+						j=0;
+						i++;
+					}else{
+						cout << "Invalid size of file 2. Input size smaller than real size of file." << endl;
+						exit(0);
 					}
+					streamFile >> mat2[j][i];
+				}
+				if (i != inp_2_size - 1 || j != inp_2_size - 1){
+					cout << "Invalid size of file 2. Input size larger than real size of file." << endl;
+					exit(0);
 				}
 				streamFile.close();
-				// Display the numbers read:
 			}else {
 			    cout << "Error: Input File 2 Not Found." << endl;
 			    exit(0);
@@ -169,8 +192,18 @@ int main(int argc, char** argv)
 	}else if (op_no >= 6 && op_no <= 7){
 		streamFile.open(fn_inp_1);
 		if (streamFile.good()) {
-			for (int i=0; i<inp_1_size; i++){
+			int i =0;
+			while (streamFile.peek() != EOF){
 				streamFile >> vec1[i];
+				i++;
+				if (i > inp_1_size+1){
+					cout << "Invalid size of file 1. Input size smaller than real size of file." << endl;
+					exit(0);
+				}
+			}
+			if (i != inp_1_size+1){
+				cout << "Invalid size of file 1. Input size larger than real size of file." << endl;
+				exit(0);
 			}
 			streamFile.close();
 		}else {
