@@ -10,16 +10,10 @@ typedef vector<Array> Matrix;
 // Convolution with padding (matrix)
 Matrix conv_pad(Matrix mat, Matrix ker, int n, int m, int p, int s = 1){
 
-    int newsz = n-m+2*p+1;
+    int newsz = (n-m+2*p)/s+1;
     
     Matrix ans(newsz, Array(newsz));
     Matrix padimage(n+2*p, Array(n+2*p));
-
-    for (int i = 0; i < n+2*p; i++){
-        for (int j = 0; j < n+2*p; j ++){
-            padimage[i][j] = 0;
-        }
-    }
 
     for (int i = 0; i < n; i++){
         for (int j = 0; j < n; j++){
@@ -27,8 +21,8 @@ Matrix conv_pad(Matrix mat, Matrix ker, int n, int m, int p, int s = 1){
         }
     }
 
-    for(int i = 0; i < (n-m+2*p)/s + 1; i++){
-        for(int j = 0; j < (n-m+2*p)/s + 1; j++){
+    for(int i = 0; i < (n-m+2*p)/s + 1; i=i+s){
+        for(int j = 0; j < (n-m+2*p)/s + 1; j=j+s){
             int sum = 0;
             for(int k = 0; k < m; k++){
                 for(int l = 0; l < m; l++){
@@ -44,16 +38,54 @@ Matrix conv_pad(Matrix mat, Matrix ker, int n, int m, int p, int s = 1){
 
 // Convolution without padding (matrix)
 Matrix conv(Matrix mat, Matrix ker, int n, int m, int s = 1){
-    return conv_pad(mat,ker,n,m,0);
+    return conv_pad(mat,ker,n,m,0,s);
 }
+
+// Matrix conv_mult_pad(Matrix mat, Matrix ker, int n, int m, int p, int s = 1){
+//     int newsz = n-m+2*p+1;
+//     int n_pad = n+2*p;
+//     Matrix ans(newsz, Array(newsz));
+//     Matrix padimage(n_pad, Array(n_pad));
+
+//     for (int i = 0; i < n; i++){
+//         for (int j = 0; j < n; j++){
+//             padimage[p+i][p+j] = mat[i][j];
+//         }
+//     }
+
+//     Matrix proc_image((n_pad-m+1)*(n_pad-m+1), Array(m*m));
+
+//     for(int i = 0; i < n_pad-m+1; i++){
+//         for(int j = 0; j < n_pad-m+1; j++){
+//             for(int k = 0; k < m; k++){
+//                 for(int l = 0; l < m; l++){
+//                     proc_image[i+j][k+l] = padimage[i+k][j+l];
+//                 }
+//             }
+//         }
+//     }
+
+//     Array proc__ker(m*m);
+//     for(int k = 0; k < m; k++){
+//         for(int l = 0; l < m; l++){
+//             proc_ker[k+l] = ker[m-l-1][m-k-1];
+//         }
+//     }
+
+
+// }
+
+// Matrix conv_mult(Matrix mat, Matrix ker, int n, int m, int s = 1){
+//     return conv_mult_pad(mat,ker,n,m,0);
+// }
 
 Matrix maxPooling(Matrix mat, int n, int f, int s = 1){
 
-    int newsz = n-f+1;
+    int newsz = (n-f)/s+1;
     Matrix ans(newsz,Array(newsz));
 
-    for (int i = 0; i < n-f + 1; i++){
-        for (int j = 0; j < n-f + 1; j++){
+    for (int i = 0; i < (n-f)/s + 1; i=i+s){
+        for (int j = 0; j < (n-f)/s + 1; j=j+s){
             float max = mat[i][j];
             for (int k = 0; k < f; k++){
                 for (int l = 0; l < f; l++){
@@ -69,11 +101,11 @@ Matrix maxPooling(Matrix mat, int n, int f, int s = 1){
 
 Matrix avgPooling(Matrix mat, int n, int f, int s = 1){
 
-    int newsz = n-f+1;
+    int newsz = (n-f)/s+1;
     Matrix ans(newsz,Array(newsz));
 
-    for (int i = 0; i < n-f + 1; i++){
-        for (int j = 0; j < n-f + 1; j++){
+    for (int i = 0; i < (n-f)/s + 1; i=i+s){
+        for (int j = 0; j < (n-f)/s + 1; j=j+s){
             float sum = 0;
             for (int k = 0; k < f; k++){
                 for (int l = 0; l < f; l++){

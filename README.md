@@ -1,7 +1,7 @@
 # Image Processing Library - Task 1
 
-### How to run
-Convolution with padding
+### How to run - with examples
+Convolution with padding (Kernel is flipped in convolution)
 
 > ./bin/main conv_with_pad 1 matrix1.txt 6 matrix2.txt 3
 
