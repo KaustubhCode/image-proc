@@ -67,7 +67,7 @@ int main(int argc, char** argv)
 	op_name = argv[1];
 	op_no = -1;
 	for (int i=0; i<8; i++){
-		if (!op_name.compare(operators[i])){
+		if (!op_name.compare(operators[i])){	
 			op_no = i;
 		}
 	}
