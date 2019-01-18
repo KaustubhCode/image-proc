@@ -3,6 +3,8 @@
 
 - Kernel is flipped while doing convolution
 
+- It is assumed that input size given will be correct. If not it will either add extra zeros to matrix (if input size is more) or exclude some part of the matrix (if input size is less) 
+
 ### How to run - with examples
 1. Convolution with padding 
 
