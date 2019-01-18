@@ -72,7 +72,7 @@ Matrix conv_mult_pad(Matrix mat, Matrix ker, int n, int m, int p, int s = 1){
             padimage[p+i][p+j] = mat[i][j];
         }
     }
-    
+
     Matrix proc_image((n_pad-m+1)*(n_pad-m+1), Array(m*m));
 
     for(int i = 0; i < n_pad-m+1; i++){
@@ -84,7 +84,6 @@ Matrix conv_mult_pad(Matrix mat, Matrix ker, int n, int m, int p, int s = 1){
             }
         }
     }
-
     Array proc_ker(m*m);
     for(int k = 0; k < m; k++){
         for(int l = 0; l < m; l++){

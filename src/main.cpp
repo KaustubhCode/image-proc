@@ -23,7 +23,7 @@ ifstream streamFile;
 
 string operators[10] = {"conv_with_pad",
 					"conv_without_pad",
-					"conv_mult_with _pad",
+					"conv_mult_with_pad",
 					"conv_mult_without_pad"
 					"max_pool",
 					"avg_pool",
@@ -220,12 +220,12 @@ int main(int argc, char** argv)
 	}else if (op_no == 1){
 		Matrix convImage = conv(mat1,mat2,inp_1_size,inp_2_size,1);
 		display(convImage);
-	// }else if (op_no == 2){
-	// 	Matrix convImage = conv_mult_pad(mat1,mat2,inp_1_size,inp_2_size,1);
-	// 	display(convImage);
-	// }else if (op_no == 3){
-	// 	Matrix convImage = conv_mult(mat1,mat2,inp_1_size,inp_2_size,1);
-	// 	display(convImage);
+	}else if (op_no == 2){
+		Matrix convImage = conv_mult_pad(mat1,mat2,inp_1_size,inp_2_size,padsize,1);
+		display(convImage);
+	}else if (op_no == 3){
+		Matrix convImage = conv_mult(mat1,mat2,inp_1_size,inp_2_size,1);
+		display(convImage);
 	}else if (op_no == 4){
 		Matrix convImage = maxPooling(mat1, inp_1_size,box_size,1);
 		display(convImage);
@@ -248,19 +248,22 @@ int main(int argc, char** argv)
 	return 0;
 }
 
-/*
+/*op_no    op_name
 0	./bin/main operation pad_size inp1 inp1_size inp2 inp2_size
 1	./bin/main operation inp1 inp1_size inp2 inp2_size
-2	./bin/main operation inp1 inp1_size box_size
-3	./bin/main operation inp1 inp1_size box_size
-4	./bin/main operation inp1 inp1_size
-5	./bin/main operation inp1 inp1_size
+2	./bin/main operation pad_size inp1 inp1_size inp2 inp2_size
+3	./bin/main operation inp1 inp1_size inp2 inp2_size
+4	./bin/main operation inp1 inp1_size box_size
+5	./bin/main operation inp1 inp1_size box_size
 6	./bin/main operation inp1 inp1_size
 7	./bin/main operation inp1 inp1_size
-
+8	./bin/main operation inp1 inp1_size
+9	./bin/main operation inp1 inp1_size
 
 ./bin/main conv_with_pad 1 matrix1.txt 6 matrix2.txt 3
 ./bin/main conv_without_pad matrix1.txt 6 matrix2.txt 3
+./bin/main conv_mult_with_pad 1 matrix1.txt 6 matrix2.txt 3
+./bin/main conv_mult_without_pad matrix1.txt 6 matrix2.txt 3
 ./bin/main max_pool matrix1.txt 6 2
 ./bin/main avg_pool matrix1.txt 6 2
 ./bin/main relu matrix2.txt 3
