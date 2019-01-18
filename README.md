@@ -3,7 +3,9 @@
 
 - Kernel is flipped while doing convolution
 
-- It is assumed that input size given will be correct. If not it will either add extra zeros to matrix (if input size is more) or exclude some part of the matrix (if input size is less) 
+- Input matrix given in column order with each value in different line. See example files for a sample matrix.
+
+- It is assumed that input size given will be correct. If not it will either add extra zeros to matrix (if input size is more) or exclude some part of the matrix (if input size is less, it will take into account the matrix formed by the first input_size * input_size lines) 
 
 ### How to run - with examples
 1. Convolution with padding 
