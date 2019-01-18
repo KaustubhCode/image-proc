@@ -8,10 +8,14 @@ using namespace std;
 typedef vector<float> Array;
 typedef vector<Array> Matrix;
 
-// Convolution with padding (matrix)
+// Convolution with padding
 Matrix conv_pad(Matrix mat, Matrix ker, int n, int m, int p, int s = 1);
-// Convolution without padding (matrix)
+// Convolution without padding
 Matrix conv(Matrix mat, Matrix ker, int n, int m, int s = 1);
+// Convolution with padding using matrix multiplication
+Matrix conv_mult_pad(Matrix mat, Matrix ker, int n, int m, int p, int s = 1);
+// Convolution without padding using matrix multiplication
+Matrix conv_mult(Matrix mat, Matrix ker, int n, int m, int s = 1);
 
 Matrix maxPooling(Matrix mat, int n, int f, int s = 1);
 

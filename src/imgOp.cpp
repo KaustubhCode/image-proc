@@ -7,6 +7,26 @@ using namespace std;
 typedef vector<float> Array;
 typedef vector<Array> Matrix;
 
+// Display Matrix
+void display(Matrix twoD){
+    for (int i = 0; i < twoD.size(); i++ ){
+        for (int j = 0; j < twoD[0].size(); j++){
+            cout << twoD[i][j];
+            cout << " ";
+        }
+        cout << endl;
+    }
+}
+
+// Display Vector
+void display_vec(Array oneD){
+    for (int i = 0; i < oneD.size(); i++ ){
+        cout << oneD[i];
+        cout << " ";
+    }
+    cout << endl;
+}
+
 // Convolution with padding (matrix)
 Matrix conv_pad(Matrix mat, Matrix ker, int n, int m, int p, int s = 1){
 
@@ -41,43 +61,51 @@ Matrix conv(Matrix mat, Matrix ker, int n, int m, int s = 1){
     return conv_pad(mat,ker,n,m,0,s);
 }
 
-// Matrix conv_mult_pad(Matrix mat, Matrix ker, int n, int m, int p, int s = 1){
-//     int newsz = n-m+2*p+1;
-//     int n_pad = n+2*p;
-//     Matrix ans(newsz, Array(newsz));
-//     Matrix padimage(n_pad, Array(n_pad));
+Matrix conv_mult_pad(Matrix mat, Matrix ker, int n, int m, int p, int s = 1){
+    int newsz = n-m+2*p+1;
+    int n_pad = n+2*p;
+    Matrix ans(newsz, Array(newsz));
+    Matrix padimage(n_pad, Array(n_pad));
 
-//     for (int i = 0; i < n; i++){
-//         for (int j = 0; j < n; j++){
-//             padimage[p+i][p+j] = mat[i][j];
-//         }
-//     }
+    for (int i = 0; i < n; i++){
+        for (int j = 0; j < n; j++){
+            padimage[p+i][p+j] = mat[i][j];
+        }
+    }
+    
+    Matrix proc_image((n_pad-m+1)*(n_pad-m+1), Array(m*m));
 
-//     Matrix proc_image((n_pad-m+1)*(n_pad-m+1), Array(m*m));
+    for(int i = 0; i < n_pad-m+1; i++){
+        for(int j = 0; j < n_pad-m+1; j++){
+            for(int k = 0; k < m; k++){
+                for(int l = 0; l < m; l++){
+                    proc_image[i*(n_pad-m+1)+j][k*m+l] = padimage[i+k][j+l];
+                }
+            }
+        }
+    }
 
-//     for(int i = 0; i < n_pad-m+1; i++){
-//         for(int j = 0; j < n_pad-m+1; j++){
-//             for(int k = 0; k < m; k++){
-//                 for(int l = 0; l < m; l++){
-//                     proc_image[i+j][k+l] = padimage[i+k][j+l];
-//                 }
-//             }
-//         }
-//     }
+    Array proc_ker(m*m);
+    for(int k = 0; k < m; k++){
+        for(int l = 0; l < m; l++){
+            proc_ker[k*m+l] = ker[m-k-1][m-l-1];
+        }
+    }
 
-//     Array proc__ker(m*m);
-//     for(int k = 0; k < m; k++){
-//         for(int l = 0; l < m; l++){
-//             proc_ker[k+l] = ker[m-l-1][m-k-1];
-//         }
-//     }
+    for (int i=0; i<newsz; i++){
+    	for (int j=0; j<newsz; j++){
+    		ans[i][j]=0;
+    		for (int k=0; k<m*m; k++){
+    			ans[i][j] += proc_image[i*newsz+j][k] * proc_ker[k];
+    		}
+    	}
+    }
+    return ans;
+}
 
-
-// }
-
-// Matrix conv_mult(Matrix mat, Matrix ker, int n, int m, int s = 1){
-//     return conv_mult_pad(mat,ker,n,m,0);
-// }
+Matrix conv_mult(Matrix mat, Matrix ker, int n, int m, int s = 1){
+    return conv_mult_pad(mat,ker,n,m,0);
+}
 
 Matrix maxPooling(Matrix mat, int n, int f, int s = 1){
 
@@ -178,24 +206,4 @@ Array softmax(Array mat, int n){
     }
 
     return ans;
-}
-
-// Display Matrix
-void display(Matrix twoD){
-    for (int i = 0; i < twoD.size(); i++ ){
-        for (int j = 0; j < twoD[0].size(); j++){
-            cout << twoD[i][j];
-            cout << " ";
-        }
-        cout << endl;
-    }
-}
-
-// Display Vector
-void display_vec(Array oneD){
-    for (int i = 0; i < oneD.size(); i++ ){
-        cout << oneD[i];
-        cout << " ";
-    }
-    cout << endl;
 }
