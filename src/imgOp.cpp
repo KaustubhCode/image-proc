@@ -53,9 +53,6 @@ Matrix conv_pad(Matrix mat, Matrix ker, int n, int m, int p, int s = 1){
         }
     }
 
-    display(padimage);
-    display(ker);
-
     return ans;
 }
 
@@ -106,7 +103,7 @@ Matrix conv_mult_pad(Matrix mat, Matrix ker, int n, int m, int p, int s = 1){
 }
 
 Matrix conv_mult(Matrix mat, Matrix ker, int n, int m, int s = 1){
-    return conv_mult_pad(mat,ker,n,m,0);
+    return conv_mult_pad(mat,ker,n,m,0,s);
 }
 
 Matrix maxPooling(Matrix mat, int n, int f, int s = 1){

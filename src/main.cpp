@@ -19,6 +19,7 @@ int inp_1_size;
 int inp_2_size;
 int padsize;
 int box_size;
+int stride = 1;
 ifstream streamFile;
 
 string operators[10] = {"conv_with_pad",
@@ -45,7 +46,7 @@ int main(int argc, char** argv)
     	exit(0);
 	}
 	char opt;
-	while((opt = getopt(argc, argv, ":h")) != -1)  
+	while((opt = getopt(argc, argv, ":hv")) != -1)  
     {  
         switch(opt)  
         {  
@@ -75,8 +76,8 @@ int main(int argc, char** argv)
 	}
 
 	if (op_no == 0 || op_no == 2){
-		if (argc != 7){
-			cout << "Incorrect Number of Arguments." << endl << "USAGE: " << endl << "    ./bin/main " << op_name << " pad_size inp1_filename inp1_size inp2_filename inp2_size" << endl;
+		if (argc < 7 || argc > 8){
+			cout << "Incorrect Number of Arguments." << endl << "USAGE: " << endl << "    ./bin/main " << op_name << " pad_size inp1_filename inp1_size inp2_filename inp2_size {stride}" << endl;
 			exit(0);
 		}
 		padsize = atoi(argv[2]);
@@ -84,23 +85,32 @@ int main(int argc, char** argv)
   		inp_1_size = atoi(argv[4]);
 	  	fn_inp_2 = argv[5];
   		inp_2_size = atoi(argv[6]);
+  		if (argc == 8){
+  			stride = atoi(argv[7]);
+  		}
 	}else if (op_no == 1 || op_no == 3){
-		if (argc != 6){
-			cout << "Incorrect Number of Arguments." << endl << "USAGE: " << endl << "    ./bin/main " << op_name << " inp1_filename inp1_size inp2_filename inp2_size" << endl;
+		if (argc < 6 || argc > 7){
+			cout << "Incorrect Number of Arguments." << endl << "USAGE: " << endl << "    ./bin/main " << op_name << " inp1_filename inp1_size inp2_filename inp2_size {stride}" << endl;
 			exit(0);
 		}
 	  	fn_inp_1 = argv[2];
   		inp_1_size = atoi(argv[3]);
 	  	fn_inp_2 = argv[4];
   		inp_2_size = atoi(argv[5]);
+  		if (argc == 7){
+  			stride = atoi(argv[6]);
+  		}
 	}else if (op_no >= 4 && op_no <= 5){
-		if (argc != 5){
-			cout << "Incorrect Number of Arguments." << endl << "USAGE: " << endl << "    ./bin/main " << op_name << " inp1_filename inp1_size box_size" << endl;
+		if (argc < 5 || argc > 6){
+			cout << "Incorrect Number of Arguments." << endl << "USAGE: " << endl << "    ./bin/main " << op_name << " inp1_filename inp1_size box_size {stride}" << endl;
 			exit(0);
 		}
 	  	fn_inp_1 = argv[2];
   		inp_1_size = atoi(argv[3]);
   		box_size = atoi(argv[4]);
+  		if (argc == 6){
+  			stride = atoi(argv[5]);
+  		}
 	}else if (op_no >= 6 && op_no <= 9){
 		if (argc != 4){
 			cout << "Incorrect Number of Arguments." << endl << "USAGE: " << endl << "    ./bin/main " << op_name << " inp1_filename inp1_size" << endl;
@@ -181,22 +191,22 @@ int main(int argc, char** argv)
 	}
 
 	if (op_no == 0){
-		Matrix convImage = conv_pad(mat1,mat2,inp_1_size,inp_2_size,padsize);
+		Matrix convImage = conv_pad(mat1,mat2,inp_1_size,inp_2_size,padsize,stride);
 		display(convImage);
 	}else if (op_no == 1){
-		Matrix convImage = conv(mat1,mat2,inp_1_size,inp_2_size,1);
+		Matrix convImage = conv(mat1,mat2,inp_1_size,inp_2_size,stride);
 		display(convImage);
 	}else if (op_no == 2){
-		Matrix convImage = conv_mult_pad(mat1,mat2,inp_1_size,inp_2_size,padsize,1);
+		Matrix convImage = conv_mult_pad(mat1,mat2,inp_1_size,inp_2_size,padsize,stride);
 		display(convImage);
 	}else if (op_no == 3){
-		Matrix convImage = conv_mult(mat1,mat2,inp_1_size,inp_2_size,1);
+		Matrix convImage = conv_mult(mat1,mat2,inp_1_size,inp_2_size,stride);
 		display(convImage);
 	}else if (op_no == 4){
-		Matrix convImage = maxPooling(mat1, inp_1_size,box_size,1);
+		Matrix convImage = maxPooling(mat1, inp_1_size,box_size,stride);
 		display(convImage);
 	}else if (op_no == 5){
-		Matrix convImage = avgPooling(mat1, inp_1_size,box_size,1);
+		Matrix convImage = avgPooling(mat1, inp_1_size,box_size,stride);
 		display(convImage);
 	}else if (op_no == 6){
 		Matrix reluimg = relu(mat1,inp_1_size);
