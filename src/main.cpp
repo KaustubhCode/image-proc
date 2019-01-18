@@ -24,7 +24,7 @@ ifstream streamFile;
 string operators[10] = {"conv_with_pad",
 					"conv_without_pad",
 					"conv_mult_with_pad",
-					"conv_mult_without_pad"
+					"conv_mult_without_pad",
 					"max_pool",
 					"avg_pool",
 					"relu",
@@ -39,7 +39,7 @@ int main(int argc, char** argv)
 	if (argc == 1){
     	cout << "Invalid usage." << endl << endl << "USAGE:" << endl << "    ./bin/main operation [operation_arg] inp1_filename inp1_size [inp2_filename inp2_size] [other_args]" << endl << endl;
     	cout << "Valid operations are " << endl;
-    	for (int i=0; i<8; i++){
+    	for (int i=0; i<10; i++){
     		cout << "    " << operators[i] << endl;
     	}
     	exit(0);
@@ -52,7 +52,7 @@ int main(int argc, char** argv)
             case 'h':
             	cout << "USAGE:" << endl << "    ./bin/main operation [operation_arg] inp1_filename inp1_size inp2_filename inp2_size" << endl << endl;
             	cout << "Valid operations are " << endl;
-            	for (int i=0; i<8; i++){
+            	for (int i=0; i<10; i++){
             		cout << "    " << operators[i] << endl;
             	}
             	exit(0);
@@ -68,7 +68,7 @@ int main(int argc, char** argv)
     }
 	op_name = argv[1];
 	op_no = -1;
-	for (int i=0; i<8; i++){
+	for (int i=0; i<10; i++){
 		if (!op_name.compare(operators[i])){	
 			op_no = i;
 		}
@@ -76,7 +76,7 @@ int main(int argc, char** argv)
 
 	if (op_no == 0 || op_no == 2){
 		if (argc != 7){
-			cout << "Incorrect Number of Arguments." << endl << "USAGE: " << endl << "    ./bin/main conv_with_pad pad_size inp1_filename inp1_size inp2_filename inp2_size" << endl;
+			cout << "Incorrect Number of Arguments." << endl << "USAGE: " << endl << "    ./bin/main " << op_name << " pad_size inp1_filename inp1_size inp2_filename inp2_size" << endl;
 			exit(0);
 		}
 		padsize = atoi(argv[2]);
@@ -86,7 +86,7 @@ int main(int argc, char** argv)
   		inp_2_size = atoi(argv[6]);
 	}else if (op_no == 1 || op_no == 3){
 		if (argc != 6){
-			cout << "Incorrect Number of Arguments." << endl << "USAGE: " << endl << "    ./bin/main conv_without_pad inp1_filename inp1_size inp2_filename inp2_size" << endl;
+			cout << "Incorrect Number of Arguments." << endl << "USAGE: " << endl << "    ./bin/main " << op_name << " inp1_filename inp1_size inp2_filename inp2_size" << endl;
 			exit(0);
 		}
 	  	fn_inp_1 = argv[2];
@@ -111,7 +111,7 @@ int main(int argc, char** argv)
 	}else{
     	cout << "Invalid usage." << endl << endl << "USAGE:" << endl << "    ./bin/main operation [operation_arg / padsize] inp1_filename inp1_size inp2_filename inp2_size" << endl << endl;
     	cout << "Valid operations are " << endl;
-    	for (int i=0; i<8; i++){
+    	for (int i=0; i<10; i++){
     		cout << "    " << operators[i] << endl;
     	}
     	exit(0);
@@ -140,6 +140,7 @@ int main(int argc, char** argv)
 	Matrix mat2(inp_2_size, Array(inp_2_size));
 	Array vec1(inp_1_size);
 	if (op_no >= 0 && op_no <= 7 ){
+		cout << op_no << endl;
 		streamFile.open(fn_inp_1);
 		if (streamFile.good()) {
 			int i=0, j=-1;
@@ -156,7 +157,7 @@ int main(int argc, char** argv)
 				streamFile >> mat1[j][i];
 			}
 			if (i != inp_1_size - 1 || j != inp_1_size - 1){
-				cout << "Invalid size of file 1. Input size larger than real size of file." << endl;
+				cout << "Invalid size of file 1. Input size larger2 than real size of file." << endl;
 				exit(0);
 			}
 			streamFile.close();
@@ -198,13 +199,14 @@ int main(int argc, char** argv)
 			while (streamFile.peek() != EOF){
 				streamFile >> vec1[i];
 				i++;
-				if (i > inp_1_size+1){
+				if (i > inp_1_size){
 					cout << "Invalid size of file 1. Input size smaller than real size of file." << endl;
 					exit(0);
 				}
 			}
-			if (i != inp_1_size+1){
-				cout << "Invalid size of file 1. Input size larger than real size of file." << endl;
+			if (i != inp_1_size){
+				cout << i << endl;
+				cout << "Invalid size of file 1. Input size larger1 than real size of file." << endl;
 				exit(0);
 			}
 			streamFile.close();
