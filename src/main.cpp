@@ -143,22 +143,10 @@ int main(int argc, char** argv)
 		cout << op_no << endl;
 		streamFile.open(fn_inp_1);
 		if (streamFile.good()) {
-			int i=0, j=-1;
-			while (streamFile.peek() != EOF){
-				if (j < inp_1_size - 1){
-					j++;
-				}else if (i < inp_1_size - 1){
-					j=0;
-					i++;
-				}else{
-					cout << "Invalid size of file 1. Input size smaller than real size of file." << endl;
-					exit(0);
+			for (int i = 0; i < inp_1_size; i++){
+				for (int j = 0; j < inp_1_size; j++){
+					streamFile >> mat1[j][i];
 				}
-				streamFile >> mat1[j][i];
-			}
-			if (i != inp_1_size - 1 || j != inp_1_size - 1){
-				cout << "Invalid size of file 1. Input size larger2 than real size of file." << endl;
-				exit(0);
 			}
 			streamFile.close();
 		}else {
@@ -169,22 +157,10 @@ int main(int argc, char** argv)
 			// Input 2
 			streamFile.open(fn_inp_2);
 			if (streamFile.good()) {
-				int i=0, j=-1;
-				while (streamFile.peek() != EOF){
-					if (j < inp_2_size - 1){
-						j++;
-					}else if (i < inp_2_size - 1){
-						j=0;
-						i++;
-					}else{
-						cout << "Invalid size of file 2. Input size smaller than real size of file." << endl;
-						exit(0);
+				for (int i = 0; i < inp_2_size; i++){
+					for (int j = 0; j < inp_2_size; j++){
+						streamFile >> mat2[j][i];
 					}
-					streamFile >> mat2[j][i];
-				}
-				if (i != inp_2_size - 1 || j != inp_2_size - 1){
-					cout << "Invalid size of file 2. Input size larger than real size of file." << endl;
-					exit(0);
 				}
 				streamFile.close();
 			}else {
@@ -195,19 +171,8 @@ int main(int argc, char** argv)
 	}else if (op_no >= 8 && op_no <= 9){
 		streamFile.open(fn_inp_1);
 		if (streamFile.good()) {
-			int i =0;
-			while (streamFile.peek() != EOF){
+			for (int i = 0; i < inp_1_size; i++){
 				streamFile >> vec1[i];
-				i++;
-				if (i > inp_1_size){
-					cout << "Invalid size of file 1. Input size smaller than real size of file." << endl;
-					exit(0);
-				}
-			}
-			if (i != inp_1_size){
-				cout << i << endl;
-				cout << "Invalid size of file 1. Input size larger1 than real size of file." << endl;
-				exit(0);
 			}
 			streamFile.close();
 		}else {

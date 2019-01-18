@@ -41,12 +41,12 @@ Matrix conv_pad(Matrix mat, Matrix ker, int n, int m, int p, int s = 1){
         }
     }
 
-    for(int i = 0; i < (n-m+2*p)/s + 1; i=i+s){
-        for(int j = 0; j < (n-m+2*p)/s + 1; j=j+s){
+    for(int i = 0; i < (n-m+2*p)/s + 1; i++){
+        for(int j = 0; j < (n-m+2*p)/s + 1; j++){
             int sum = 0;
             for(int k = 0; k < m; k++){
                 for(int l = 0; l < m; l++){
-                    sum = sum + padimage[i+k][j+l] * ker[m-k-1][m-l-1];
+                    sum = sum + padimage[i*s+k][j*s+l] * ker[m-k-1][m-l-1];
                 }
             }
             ans[i][j] = sum;
@@ -62,7 +62,7 @@ Matrix conv(Matrix mat, Matrix ker, int n, int m, int s = 1){
 }
 
 Matrix conv_mult_pad(Matrix mat, Matrix ker, int n, int m, int p, int s = 1){
-    int newsz = n-m+2*p+1;
+    int newsz = (n-m+2*p)/s+1;
     int n_pad = n+2*p;
     Matrix ans(newsz, Array(newsz));
     Matrix padimage(n_pad, Array(n_pad));
@@ -73,13 +73,13 @@ Matrix conv_mult_pad(Matrix mat, Matrix ker, int n, int m, int p, int s = 1){
         }
     }
 
-    Matrix proc_image((n_pad-m+1)*(n_pad-m+1), Array(m*m));
+    Matrix proc_image(newsz*newsz, Array(m*m));
 
-    for(int i = 0; i < n_pad-m+1; i++){
-        for(int j = 0; j < n_pad-m+1; j++){
+    for(int i = 0; i < newsz; i++){
+        for(int j = 0; j < newsz; j++){
             for(int k = 0; k < m; k++){
                 for(int l = 0; l < m; l++){
-                    proc_image[i*(n_pad-m+1)+j][k*m+l] = padimage[i+k][j+l];
+                    proc_image[i*newsz+j][k*m+l] = padimage[i*s+k][j*s+l];
                 }
             }
         }
@@ -111,12 +111,12 @@ Matrix maxPooling(Matrix mat, int n, int f, int s = 1){
     int newsz = (n-f)/s+1;
     Matrix ans(newsz,Array(newsz));
 
-    for (int i = 0; i < (n-f)/s + 1; i=i+s){
-        for (int j = 0; j < (n-f)/s + 1; j=j+s){
+    for (int i = 0; i < (n-f)/s + 1; i++){
+        for (int j = 0; j < (n-f)/s + 1; j++){
             float max = mat[i][j];
             for (int k = 0; k < f; k++){
                 for (int l = 0; l < f; l++){
-                    max = (mat[i+k][j+l] > max) ? mat[i+k][j+l] : max;
+                    max = (mat[i*s+k][j*s+l] > max) ? mat[i*s+k][j*s+l] : max;
                 }
             }
             ans[i][j] = max;
@@ -131,12 +131,12 @@ Matrix avgPooling(Matrix mat, int n, int f, int s = 1){
     int newsz = (n-f)/s+1;
     Matrix ans(newsz,Array(newsz));
 
-    for (int i = 0; i < (n-f)/s + 1; i=i+s){
-        for (int j = 0; j < (n-f)/s + 1; j=j+s){
+    for (int i = 0; i < (n-f)/s + 1; i++){
+        for (int j = 0; j < (n-f)/s + 1; j++){
             float sum = 0;
             for (int k = 0; k < f; k++){
                 for (int l = 0; l < f; l++){
-                    sum = sum + mat[i+k][j+l];
+                    sum = sum + mat[i*s+k][j*s+l];
                 }
             }
             ans[i][j] = sum/(f*f);
