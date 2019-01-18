@@ -140,7 +140,6 @@ int main(int argc, char** argv)
 	Matrix mat2(inp_2_size, Array(inp_2_size));
 	Array vec1(inp_1_size);
 	if (op_no >= 0 && op_no <= 7 ){
-		cout << op_no << endl;
 		streamFile.open(fn_inp_1);
 		if (streamFile.good()) {
 			for (int i = 0; i < inp_1_size; i++){

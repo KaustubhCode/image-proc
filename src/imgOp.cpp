@@ -53,6 +53,9 @@ Matrix conv_pad(Matrix mat, Matrix ker, int n, int m, int p, int s = 1){
         }
     }
 
+    display(padimage);
+    display(ker);
+
     return ans;
 }
 
