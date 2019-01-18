@@ -21,8 +21,10 @@ int padsize;
 int box_size;
 ifstream streamFile;
 
-string operators[8] = {"conv_with_pad",
+string operators[10] = {"conv_with_pad",
 					"conv_without_pad",
+					"conv_mult_with _pad",
+					"conv_mult_without_pad"
 					"max_pool",
 					"avg_pool",
 					"relu",
@@ -72,7 +74,7 @@ int main(int argc, char** argv)
 		}
 	}
 
-	if (op_no == 0){
+	if (op_no == 0 || op_no == 2){
 		if (argc != 7){
 			cout << "Incorrect Number of Arguments." << endl << "USAGE: " << endl << "    ./bin/main conv_with_pad pad_size inp1_filename inp1_size inp2_filename inp2_size" << endl;
 			exit(0);
@@ -82,7 +84,7 @@ int main(int argc, char** argv)
   		inp_1_size = atoi(argv[4]);
 	  	fn_inp_2 = argv[5];
   		inp_2_size = atoi(argv[6]);
-	}else if (op_no == 1){
+	}else if (op_no == 1 || op_no == 3){
 		if (argc != 6){
 			cout << "Incorrect Number of Arguments." << endl << "USAGE: " << endl << "    ./bin/main conv_without_pad inp1_filename inp1_size inp2_filename inp2_size" << endl;
 			exit(0);
@@ -91,7 +93,7 @@ int main(int argc, char** argv)
   		inp_1_size = atoi(argv[3]);
 	  	fn_inp_2 = argv[4];
   		inp_2_size = atoi(argv[5]);
-	}else if (op_no >= 2 && op_no <= 3){
+	}else if (op_no >= 4 && op_no <= 5){
 		if (argc != 5){
 			cout << "Incorrect Number of Arguments." << endl << "USAGE: " << endl << "    ./bin/main " << op_name << " inp1_filename inp1_size box_size" << endl;
 			exit(0);
@@ -99,7 +101,7 @@ int main(int argc, char** argv)
 	  	fn_inp_1 = argv[2];
   		inp_1_size = atoi(argv[3]);
   		box_size = atoi(argv[4]);
-	}else if (op_no >= 4 && op_no <= 7){
+	}else if (op_no >= 6 && op_no <= 9){
 		if (argc != 4){
 			cout << "Incorrect Number of Arguments." << endl << "USAGE: " << endl << "    ./bin/main " << op_name << " inp1_filename inp1_size" << endl;
 			exit(0);
@@ -107,7 +109,7 @@ int main(int argc, char** argv)
 	  	fn_inp_1 = argv[2];
   		inp_1_size = atoi(argv[3]);
 	}else{
-    	cout << "Invalid usage." << endl << endl << "USAGE:" << endl << "    ./bin/main operation [operation_arg] inp1_filename inp1_size inp2_filename inp2_size" << endl << endl;
+    	cout << "Invalid usage." << endl << endl << "USAGE:" << endl << "    ./bin/main operation [operation_arg / padsize] inp1_filename inp1_size inp2_filename inp2_size" << endl << endl;
     	cout << "Valid operations are " << endl;
     	for (int i=0; i<8; i++){
     		cout << "    " << operators[i] << endl;
@@ -137,7 +139,7 @@ int main(int argc, char** argv)
 	Matrix mat1(inp_1_size, Array(inp_1_size));
 	Matrix mat2(inp_2_size, Array(inp_2_size));
 	Array vec1(inp_1_size);
-	if (op_no >= 0 && op_no <= 5 ){
+	if (op_no >= 0 && op_no <= 7 ){
 		streamFile.open(fn_inp_1);
 		if (streamFile.good()) {
 			int i=0, j=-1;
@@ -162,7 +164,7 @@ int main(int argc, char** argv)
 		    cout << "Error: Input File 1 Not Found." << endl;
 		    exit(0);
 		}
-		if (op_no <= 1){
+		if (op_no <= 3){
 			// Input 2
 			streamFile.open(fn_inp_2);
 			if (streamFile.good()) {
@@ -189,7 +191,7 @@ int main(int argc, char** argv)
 			    exit(0);
 			}
 		}
-	}else if (op_no >= 6 && op_no <= 7){
+	}else if (op_no >= 8 && op_no <= 9){
 		streamFile.open(fn_inp_1);
 		if (streamFile.good()) {
 			int i =0;
@@ -216,24 +218,30 @@ int main(int argc, char** argv)
 		Matrix convImage = conv_pad(mat1,mat2,inp_1_size,inp_2_size,padsize);
 		display(convImage);
 	}else if (op_no == 1){
-		Matrix convImage2 = conv(mat1,mat2,inp_1_size,inp_2_size,1);
-		display(convImage2);
-	}else if (op_no == 2){
-		Matrix convImage2 = maxPooling(mat1, inp_1_size,box_size,1);
-		display(convImage2);
-	}else if (op_no == 3){
-		Matrix convImage2 = avgPooling(mat1, inp_1_size,box_size,1);
-		display(convImage2);
+		Matrix convImage = conv(mat1,mat2,inp_1_size,inp_2_size,1);
+		display(convImage);
+	// }else if (op_no == 2){
+	// 	Matrix convImage = conv_mult_pad(mat1,mat2,inp_1_size,inp_2_size,1);
+	// 	display(convImage);
+	// }else if (op_no == 3){
+	// 	Matrix convImage = conv_mult(mat1,mat2,inp_1_size,inp_2_size,1);
+	// 	display(convImage);
 	}else if (op_no == 4){
+		Matrix convImage = maxPooling(mat1, inp_1_size,box_size,1);
+		display(convImage);
+	}else if (op_no == 5){
+		Matrix convImage = avgPooling(mat1, inp_1_size,box_size,1);
+		display(convImage);
+	}else if (op_no == 6){
 		Matrix reluimg = relu(mat1,inp_1_size);
 		display(reluimg);
-	}else if (op_no == 5){
+	}else if (op_no == 7){
 		Matrix tanhimg = tan_h(mat1,inp_1_size);
 		display(tanhimg);
-	}else if (op_no == 6){
+	}else if (op_no == 8){
 		Array sigvec = sigmoid(vec1, inp_1_size);
 		display_vec(sigvec);
-	}else if (op_no == 7){
+	}else if (op_no == 9){
 		Array softmax_vec = softmax(vec1, inp_1_size);
 		display_vec(softmax_vec);	
 	}
