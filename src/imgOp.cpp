@@ -238,7 +238,7 @@ Matrix conv(Matrix mat, Matrix ker, int n, int m, int s = 1){
     return conv_pad(mat,ker,n,m,0,s);
 }
 
-Matrix conv_mult_pad(Matrix mat, Matrix ker, int n, int m, int p, int s = 1){
+Matrix conv_mult_pad(Matrix mat, Matrix ker, int n, int m, int p, int s = 1, int mult = 0){
     int newsz = (n-m+2*p)/s+1;
     int n_pad = n+2*p;
     Matrix padimage(n_pad, Array(n_pad));
@@ -267,13 +267,27 @@ Matrix conv_mult_pad(Matrix mat, Matrix ker, int n, int m, int p, int s = 1){
         }
     }
 
+    switch(mult){
+        case 1:
+            return mult_openblas(proc_image,proc_ker, newsz, m);
+            break;
+        case 2:
+            return mult_mkl(proc_image,proc_ker, newsz, m);
+            break;
+        case 3:
+            return mult_pthread(proc_image,proc_ker,newsz,m);
+            break;
+        default:
+            return simple_multiplication(proc_image,proc_ker,newsz,m);
+    }
+
     //return mult_openblas(proc_image,proc_ker, newsz, m);
     //return mult_mkl(proc_image,proc_ker, newsz, m);
     return mult_pthread(proc_image,proc_ker,newsz,m);
     //return simple_multiplication(proc_image,proc_ker,newsz,m);
 }   
 
-Matrix conv_mult(Matrix mat, Matrix ker, int n, int m, int s = 1){
+Matrix conv_mult(Matrix mat, Matrix ker, int n, int m, int s = 1, int mult = 0){
     return conv_mult_pad(mat,ker,n,m,0,s);
 }
 

@@ -18,10 +18,12 @@
 # 	$(CXX) $(CXXFLAGS) -c main.cpp
 
 # imgOp.o: imgOp.h
-
+OPENBLAS = -lopenblas
+BOOST = -lboost_program_options -lboost_system
+MKL = -fopenmp -m64 -I${MKLROOT}/include -Wl,--no-as-needed -L${MKLROOT}/lib/intel64 -lmkl_intel_lp64 -lmkl_core -lmkl_gnu_thread -lpthread -lm -ldl
 IDIR = ./include
 CC = g++
-CFLAGS = -I$(IDIR) -std=c++11 -lopenblas -fopenmp -m64 -I${MKLROOT}/include -Wl,--no-as-needed -L${MKLROOT}/lib/intel64 -lmkl_intel_lp64 -lmkl_core -lmkl_gnu_thread -lpthread -lm -ldl
+CFLAGS = -I$(IDIR) -std=c++11 $(OPENBLAS) $(BOOST) $(MKL)
 
 ODIR = ./build
 EDIR = ./bin
@@ -33,11 +35,20 @@ DEPS = $(patsubst %,$(IDIR)/%,$(_DEPS))
 _OBJ = main.o imgOp.o
 OBJ = $(patsubst %,$(ODIR)/%,$(_OBJ))
 
+all: $(EDIR)/main $(EDIR)/evaluator
+
 $(ODIR)/%.o: $(SDIR)/%.cpp $(DEPS)
 	$(CC) -c -o $@ $< $(CFLAGS)
 
 $(EDIR)/main: $(OBJ)
 	$(CC) -o $@ $^ $(CFLAGS)
+
+# Evaulator
+$(ODIR)/evaluator.o: $(SDIR)/evaluator.cpp
+	$(CC) -c -o $@ $< $(CFLAGS)
+
+$(EDIR)/evaluator: $(ODIR)/evaluator.o
+	$(CC) -o $@ $^
 
 .PHONY: clean
 
