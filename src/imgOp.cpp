@@ -1,7 +1,7 @@
 #include <iostream>
 #include <vector>
 #include <bits/stdc++.h> // for tanh, max and exp functions
-// #include <mkl.h>
+#include <pthread.h>
 namespace openblas{
     #include <cblas.h>
 }
@@ -9,8 +9,18 @@ namespace mkl{
     #include <mkl.h>
 }
 using namespace std;
+
+#define MAX_THREAD 4
+
 typedef vector<float> Array;
 typedef vector<Array> Matrix;
+
+struct thread_mat{
+    int tid = 0;
+    Matrix A;
+    Array B;
+    Array C;
+};
 
 // Display Matrix
 void display(Matrix twoD){
@@ -44,6 +54,24 @@ Matrix simple_multiplication(Matrix proc_image, Array proc_ker, int n, int m){
     }
     return ans;
 }
+
+void* thread_multiplication(void* arg) 
+{ 
+    struct thread_mat* tmat = (struct thread_mat*) arg;
+    int k = tmat->tid++;
+
+    int n = (tmat->A).size();
+    int m = (tmat->B).size();
+
+    // Each thread computes 1/4th of matrix multiplication 
+    for (int i = k * n / MAX_THREAD; i < (k + 1) * n / MAX_THREAD; i++){
+        for (int j = 0; j < m; j++){ 
+            (tmat->C)[i] += (tmat->A)[i][j] * (tmat->B)[j];
+        }
+    }
+
+    pthread_exit(NULL);
+} 
 
 Matrix mult_openblas(Matrix proc_image, Array proc_ker, int n, int m){
     int A_rows = proc_image.size();
@@ -143,6 +171,39 @@ Matrix mult_mkl(Matrix proc_image, Array proc_ker, int n, int m){
     return ans;
 }
 
+Matrix mult_pthread(Matrix proc_image, Array proc_ker, int n, int m){
+
+    Array result(n*n);
+
+    struct thread_mat p;
+
+    p.A = proc_image;
+    p.B = proc_ker;
+    p.C = result;
+
+    pthread_t threads[MAX_THREAD];
+
+    // Creating four threads, each evaluating its own part 
+    for (int i = 0; i < MAX_THREAD; i++) { 
+        pthread_create(&threads[i], NULL, thread_multiplication, (void*)(&p)); 
+    } 
+  
+    // joining and waiting for all threads to complete 
+    for (int i = 0; i < MAX_THREAD; i++){
+        pthread_join(threads[i], NULL);
+    }
+
+    Matrix ans(n, Array(n));
+
+    for (int i=0; i<n; i++){
+        for (int j=0; j<n; j++){
+            ans[i][j] = (p.C)[i*n+j];
+        }
+    }
+
+    return ans;
+}
+
 // Convolution with padding (matrix)
 Matrix conv_pad(Matrix mat, Matrix ker, int n, int m, int p, int s = 1){
 
@@ -206,11 +267,11 @@ Matrix conv_mult_pad(Matrix mat, Matrix ker, int n, int m, int p, int s = 1){
         }
     }
 
-    // return mult_openblas(proc_image,proc_ker, newsz, m);
-    return mult_mkl(proc_image,proc_ker, newsz, m);
-
-    // return simple_multiplication(proc_image,proc_ker,newsz,m);
-}
+    //return mult_openblas(proc_image,proc_ker, newsz, m);
+    //return mult_mkl(proc_image,proc_ker, newsz, m);
+    return mult_pthread(proc_image,proc_ker,newsz,m);
+    //return simple_multiplication(proc_image,proc_ker,newsz,m);
+}   
 
 Matrix conv_mult(Matrix mat, Matrix ker, int n, int m, int s = 1){
     return conv_mult_pad(mat,ker,n,m,0,s);

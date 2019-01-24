@@ -109,3 +109,11 @@ Command Syntax
 Example Command
 
 > ./bin/main softmax vector1.txt 3
+
+#Task 2
+###Notes
+
+> sudo apt-get install libopenblas-dev #for installing openBLAS
+> . /opt/intel/mkl/bin/mklvars.sh intel64 #for setting env variable for intel mkl 
+
+
