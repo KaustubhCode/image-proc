@@ -35,11 +35,20 @@ DEPS = $(patsubst %,$(IDIR)/%,$(_DEPS))
 _OBJ = main.o imgOp.o
 OBJ = $(patsubst %,$(ODIR)/%,$(_OBJ))
 
+all: $(EDIR)/main $(EDIR)/evaluator
+
 $(ODIR)/%.o: $(SDIR)/%.cpp $(DEPS)
 	$(CC) -c -o $@ $< $(CFLAGS)
 
 $(EDIR)/main: $(OBJ)
 	$(CC) -o $@ $^ $(CFLAGS)
+
+# Evaulator
+$(ODIR)/evaluator.o: $(SDIR)/evaluator.cpp
+	$(CC) -c -o $@ $< $(CFLAGS)
+
+$(EDIR)/evaluator: $(ODIR)/evaluator.o
+	$(CC) -o $@ $^
 
 .PHONY: clean
 
