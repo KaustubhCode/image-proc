@@ -1,10 +1,14 @@
 #include <iostream>
 #include <vector>
 #include <bits/stdc++.h> // for tanh, max and exp functions
-#include "mkl.h"
-
+// #include <mkl.h>
+namespace openblas{
+    #include <cblas.h>
+}
+namespace mkl{
+    #include <mkl.h>
+}
 using namespace std;
-
 typedef vector<float> Array;
 typedef vector<Array> Matrix;
 
@@ -41,84 +45,104 @@ Matrix simple_multiplication(Matrix proc_image, Array proc_ker, int n, int m){
     return ans;
 }
 
-Matrix mult_openblas(Matrix proc_image, Array proc_ker){
-    double *A, *B, *C;
-    int m, n, k, i, j;
-    double alpha, beta;
+Matrix mult_openblas(Matrix proc_image, Array proc_ker, int n, int m){
+    int A_rows = proc_image.size();
+    int A_cols = proc_image[0].size();
 
-    printf ("\n This example computes real matrix C=alpha*A*B+beta*C using \n"
-            " Intel(R) MKL function dgemm, where A, B, and  C are matrices and \n"
-            " alpha and beta are double precision scalars\n\n");
+    float *A;
+    float *B;
+    B = new float[A_cols];
+    A = new float[A_rows*A_cols];
+    float *AB;
+    AB = new float[A_rows];
+    for (int i=0; i<A_rows; i++){
+        for (int j=0; j<A_cols; j++){
+            A[i*A_cols+j] = proc_image[i][j];
+        }
+    }
+    for (int i=0; i<A_cols; i++){
+        B[i]=proc_ker[i];
+    }
+    // cout << "Printing A" << endl;
+    // for (int i=0; i<A_rows; i++){
+    //     for (int j=0; j<A_cols; j++){
+    //         cout << A[i*A_cols+j] << " ";
+    //     }
+    //     cout << endl;
+    // }
+    // cout << endl << endl;
+    // cout << "Printing B" << endl;
+    // for (int i=0; i<A_cols; i++){
+    //     cout << B[i] << " ";
+    // }
+    // cout << endl << endl;
+    // display(proc_image);
+    // Error, width and height should match!
+    // assert(A_width == B_height);
 
-    m = proc_image.size(), k = proc_ker.size, n = 1;
-    printf (" Initializing data for matrix multiplication C=A*B for matrix \n"
-            " A(%ix%i) and matrix B(%ix%i)\n\n", m, k, k, n);
-    alpha = 1.0; beta = 0.0;
+    // http://www.netlib.org/lapack/explore-html/d7/d2b/dgemm_8f.html
+    openblas::cblas_sgemv(openblas::CblasRowMajor, openblas::CblasNoTrans, A_rows, A_cols, 1.0, A, A_cols, B, 1, 0, AB, 1);
+    
+    Matrix ans(n, Array(n));
+    for (int i=0; i<n; i++){
+        for (int j=0; j<n; j++){
+            ans[i][j]=AB[i*n+j];
+        }
+    }
+    // cout << " ========= " << endl;
+    // for (int i=0; i<n*n; i++){
+    //     cout << AB[i] << " ";
+    // }
+    // cout << " ========= " << endl;
+    free(A);
+    free(B);
+    free(AB);
+    return ans;
+}
 
-    printf (" Allocating memory for matrices aligned on 64-byte boundary for better \n"
-            " performance \n\n");
-    A = (double *)mkl_malloc( m*k*sizeof( double ), 64 );
-    B = (double *)mkl_malloc( k*n*sizeof( double ), 64 );
-    C = (double *)mkl_malloc( m*n*sizeof( double ), 64 );
-    if (A == NULL || B == NULL || C == NULL) {
+Matrix mult_mkl(Matrix proc_image, Array proc_ker, int n, int m){
+    int A_rows = proc_image.size();
+    int A_cols = proc_image[0].size();
+
+    float *A;
+    float *B;
+    float *AB;
+    A = (float *)mkl::mkl_malloc( A_rows*A_cols*sizeof( float ), 32);
+    B = (float *)mkl::mkl_malloc( A_cols*sizeof( float ), 32);
+    AB = (float *)mkl::mkl_malloc( A_rows*sizeof( float ), 32);
+    if (A == NULL || B == NULL || AB == NULL) {
       printf( "\n ERROR: Can't allocate memory for matrices. Aborting... \n\n");
-      mkl_free(A);
-      mkl_free(B);
-      mkl_free(C);
-      return 1;
+      mkl::mkl_free(A);
+      mkl::mkl_free(B);
+      mkl::mkl_free(AB);
+      exit(0);
+      //return 1;
+    }
+    for (int i=0; i<A_rows; i++){
+        for (int j=0; j<A_cols; j++){
+            A[i*A_cols+j] = proc_image[i][j];
+        }
+    }
+    for (int i=0; i<A_cols; i++){
+        B[i]=proc_ker[i];
     }
 
-    printf (" Intializing matrix data \n\n");
-    for (i = 0; i < m; i++) {
-        for (j = 0; j < k; j++){
-            A[i*m+k] = (double)proc_image[i][j];
+    mkl::cblas_sgemv(mkl::CblasRowMajor, mkl::CblasNoTrans, A_rows, A_cols, 1.0, A, A_cols, B, 1, 0, AB, 1);
+    
+    Matrix ans(n, Array(n));
+    for (int i=0; i<n; i++){
+        for (int j=0; j<n; j++){
+            ans[i][j]=AB[i*n+j];
         }
     }
 
-    for (i = 0; i < (k*n); i++) {
-        B[i] = (double)proc_ker[i];
-    }
+    mkl::mkl_free(A);
+    mkl::mkl_free(B);
+    mkl::mkl_free(AB);
 
-    for (i = 0; i < (m*n); i++) {
-        C[i] = 0.0;
-    }
-
-    printf (" Computing matrix product using Intel(R) MKL dgemm function via CBLAS interface \n\n");
-    cblas_dgemm(CblasRowMajor, CblasNoTrans, CblasNoTrans, 
-                m, n, k, alpha, A, k, B, n, beta, C, n);
-    printf ("\n Computations completed.\n\n");
-
-    printf (" Top left corner of matrix A: \n");
-    for (i=0; i<min(m,6); i++) {
-      for (j=0; j<min(k,6); j++) {
-        printf ("%12.0f", A[j+i*k]);
-      }
-      printf ("\n");
-    }
-
-    printf ("\n Top left corner of matrix B: \n");
-    for (i=0; i<min(k,6); i++) {
-      for (j=0; j<min(n,6); j++) {
-        printf ("%12.0f", B[j+i*n]);
-      }
-      printf ("\n");
-    }
-    
-    printf ("\n Top left corner of matrix C: \n");
-    for (i=0; i<min(m,6); i++) {
-      for (j=0; j<min(n,6); j++) {
-        printf ("%12.5G", C[j+i*n]);
-      }
-      printf ("\n");
-    }
-
-    printf ("\n Deallocating memory \n\n");
-    mkl_free(A);
-    mkl_free(B);
-    mkl_free(C);
-
-    printf (" Example completed. \n\n");
+    return ans;
 }
+
 // Convolution with padding (matrix)
 Matrix conv_pad(Matrix mat, Matrix ker, int n, int m, int p, int s = 1){
 
@@ -182,7 +206,10 @@ Matrix conv_mult_pad(Matrix mat, Matrix ker, int n, int m, int p, int s = 1){
         }
     }
 
-    return simple_multiplication(proc_image,proc_ker,newsz,m);
+    // return mult_openblas(proc_image,proc_ker, newsz, m);
+    return mult_mkl(proc_image,proc_ker, newsz, m);
+
+    // return simple_multiplication(proc_image,proc_ker,newsz,m);
 }
 
 Matrix conv_mult(Matrix mat, Matrix ker, int n, int m, int s = 1){

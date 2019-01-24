@@ -20,6 +20,7 @@ int inp_2_size;
 int padsize;
 int box_size;
 int stride = 1;
+int mult_method = 0; // 0 = simple, 1 = openblas, 2 = mkl
 ifstream streamFile;
 
 string operators[10] = {"conv_with_pad",
@@ -197,7 +198,7 @@ int main(int argc, char** argv)
 		Matrix convImage = conv(mat1,mat2,inp_1_size,inp_2_size,stride);
 		display(convImage);
 	}else if (op_no == 2){
-		Matrix convImage = conv_mult_pad(mat1,mat2,inp_1_size,inp_2_size,padsize,stride);
+		Matrix convImage = conv_mult_pad(mat1,mat2,inp_1_size,inp_2_size,padsize,stride,mult_method);
 		display(convImage);
 	}else if (op_no == 3){
 		Matrix convImage = conv_mult(mat1,mat2,inp_1_size,inp_2_size,stride);

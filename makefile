@@ -21,7 +21,7 @@
 
 IDIR = ./include
 CC = g++
-CFLAGS = -I$(IDIR) -std=c++11
+CFLAGS = -I$(IDIR) -std=c++11 -lopenblas -fopenmp -m64 -I${MKLROOT}/include -Wl,--no-as-needed -L${MKLROOT}/lib/intel64 -lmkl_intel_lp64 -lmkl_core -lmkl_gnu_thread -lpthread -lm -ldl
 
 ODIR = ./build
 EDIR = ./bin
