@@ -18,10 +18,12 @@
 # 	$(CXX) $(CXXFLAGS) -c main.cpp
 
 # imgOp.o: imgOp.h
-
+OPENBLAS = -lopenblas
+BOOST = -lboost_program_options -lboost_system
+MKL = -fopenmp -m64 -I${MKLROOT}/include -Wl,--no-as-needed -L${MKLROOT}/lib/intel64 -lmkl_intel_lp64 -lmkl_core -lmkl_gnu_thread -lpthread -lm -ldl
 IDIR = ./include
 CC = g++
-CFLAGS = -I$(IDIR) -std=c++11 -lopenblas -fopenmp -m64 -I${MKLROOT}/include -Wl,--no-as-needed -L${MKLROOT}/lib/intel64 -lmkl_intel_lp64 -lmkl_core -lmkl_gnu_thread -lpthread -lm -ldl
+CFLAGS = -I$(IDIR) -std=c++11 $(OPENBLAS) $(BOOST) $(MKL)
 
 ODIR = ./build
 EDIR = ./bin

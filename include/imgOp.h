@@ -13,9 +13,9 @@ Matrix conv_pad(Matrix mat, Matrix ker, int n, int m, int p, int s = 1);
 // Convolution without padding
 Matrix conv(Matrix mat, Matrix ker, int n, int m, int s = 1);
 // Convolution with padding using matrix multiplication
-Matrix conv_mult_pad(Matrix mat, Matrix ker, int n, int m, int p, int s = 1);
+Matrix conv_mult_pad(Matrix mat, Matrix ker, int n, int m, int p, int s = 1, int mult = 0);
 // Convolution without padding using matrix multiplication
-Matrix conv_mult(Matrix mat, Matrix ker, int n, int m, int s = 1);
+Matrix conv_mult(Matrix mat, Matrix ker, int n, int m, int s = 1, int mult = 0);
 
 Matrix maxPooling(Matrix mat, int n, int f, int s = 1);
 
