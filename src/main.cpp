@@ -6,10 +6,12 @@
 #include <vector>
 #include <boost/program_options.hpp>
 #include <boost/filesystem.hpp>
+#include <chrono> 
 #include "imgOp.h"
 
 namespace po = boost::program_options;
 using namespace std;
+using namespace std::chrono; 
 
 typedef vector<float> Array;
 typedef vector<Array> Matrix;
@@ -302,10 +304,20 @@ int main(int argc, char** argv)
 		Matrix convImage = conv(mat1,mat2,inp_1_size,inp_2_size,stride);
 		display(convImage);
 	}else if (op_no == 2){
+		auto start = high_resolution_clock::now();
 		Matrix convImage = conv_mult_pad(mat1,mat2,inp_1_size,inp_2_size,padsize,stride,mult_method);
+		auto stop = high_resolution_clock::now();
+		auto duration = duration_cast<microseconds>(stop - start);
+		cout << "Time: "
+         << duration.count() << " microseconds" << endl;
 		display(convImage);
 	}else if (op_no == 3){
-		Matrix convImage = conv_mult(mat1,mat2,inp_1_size,inp_2_size,stride);
+		auto start = high_resolution_clock::now();
+		Matrix convImage = conv_mult(mat1,mat2,inp_1_size,inp_2_size,stride,mult_method);
+		auto stop = high_resolution_clock::now();
+		auto duration = duration_cast<microseconds>(stop - start);
+		cout << "Time: "
+         << duration.count() << " microseconds" << endl;
 		display(convImage);
 	}else if (op_no == 4){
 		Matrix convImage = maxPooling(mat1, inp_1_size,box_size,stride);
@@ -343,9 +355,9 @@ int main(int argc, char** argv)
 8	./bin/main operation inp1 inp1_size
 9	./bin/main operation inp1 inp1_size
 
-./bin/main conv_with_pad 1 matrix1.txt 6 matrix2.txt 3
+./bin/main conv_with_pad matrix1.txt 6 matrix2.txt 3 1
 ./bin/main conv_without_pad matrix1.txt 6 matrix2.txt 3
-./bin/main conv_mult_with_pad 1 matrix1.txt 6 matrix2.txt 3
+./bin/main conv_mult_with_pad matrix1.txt 6 matrix2.txt 3 1
 ./bin/main conv_mult_without_pad matrix1.txt 6 matrix2.txt 3
 ./bin/main max_pool matrix1.txt 6 2
 ./bin/main avg_pool matrix1.txt 6 2
