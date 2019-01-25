@@ -48,7 +48,7 @@ $(ODIR)/evaluator.o: $(SDIR)/evaluator.cpp
 	$(CC) -c -o $@ $< $(CFLAGS)
 
 $(EDIR)/evaluator: $(ODIR)/evaluator.o
-	$(CC) -o $@ $^
+	$(CC) -o $@ $^ $(CFLAGS)
 
 .PHONY: clean
 
