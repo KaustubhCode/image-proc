@@ -6,28 +6,31 @@ Image processing library with functions (in src/imgOp) like convolution with a k
 ## Description
 
 Description of each file in '/src':
-- 'main.cpp' - Takes in user input and calls 'img.cpp' for applying operations.
-- 'imgOp.cpp' - Contains all the required functions for the image processing.
-- 'matgen.cpp' - Creates 10 matrices of sizes from range 1 to 'mat_size' with random integer elements from range -'range' to +'range'. All these matrices are stored in the './data/matrix' folder
-- 'evaluator.cpp' - Evaluated all the matrices in the './data/matrix' for convolution using matrix multiplication using kernels from './data/ker'. It stores the time in the evaluation inside './data/mean'. First column is time and second column is matrix size n.
-- 'main.cpp' -  Calculates mean and standard deviations of times (for each size) and stores them in './data/mean' and './data/sd' respectively. First column has mean/standard deviation and second column is matrix size n.
+- `main.cpp` - Takes in user input and calls `imgOp.cpp` for applying operations.
+- `imgOp.cpp` - Contains all the required functions for the image processing.
+- `matgen.cpp` - Creates 10 matrices of sizes from range 1 to `mat_size` with random integer elements from range -`range` to +`range`. All these matrices are stored in the `./data/matrix` folder
+- `evaluator.cpp` - Evaluated all the matrices in the `./data/matrix` for convolution using matrix multiplication using kernels from `./data/ker`. It stores the time in the evaluation inside `./data/mean`. First column is time and second column is matrix size n.
+- `main.cpp` -  Calculates mean and standard deviations of times (for each size) and stores them in `./data/mean` and `./data/sd` respectively. First column has mean/standard deviation and second column is matrix size n.
 
-## Prerequisites
+## Getting Started
+
+### Prerequisites
 
 - Standard C++ libraries (g++)
 - Boost library (*Note*: It is only required for better user interface/program options, not for processing)
   > sudo apt-get install libboost-all-dev
-  > $ sudo apt-get update
+  > sudo apt-get update
 - Intel MKL library (for matrix multiplication)
   - Download library from Intel mkl site.
-  - Link it using > . /opt/intel/mkl/bin/mklvars.sh intel64 #for setting env variable for intel mkl
+  - Link it using 
+    > . /opt/intel/mkl/bin/mklvars.sh intel64 #for setting env variable for intel mkl
 - OpenBLAS library
   > $ sudo apt-get install libopenblas-dev #for installing openBLAS
   
-## How to run
+### How to run
 
-- After cloning/downloading the repo, in the main folder,use 'make' to compile all the files.
-- Use './bin/main -h' for help on different instructions. Example:-
+- After cloning/downloading the repo, in the main folder,use `make` to compile all the files.
+- Use `./bin/main -h` for help on different instructions. Example:-
   > ./bin/main conv_mult_with_pad matrix1.txt 6 matrix2.txt 3 1 pthread
 - Use './bin/main [operator name] -h' to get help on the particular operation.
 - For generating matrices, use 
