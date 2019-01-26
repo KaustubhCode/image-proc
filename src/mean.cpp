@@ -6,6 +6,9 @@
 #include <string>
 #include <array>
 #include <cmath>
+#include <sys/stat.h> 
+#include <sys/types.h>
+#include <bits/stdc++.h> 
 
 using namespace std;
 
@@ -16,6 +19,12 @@ int main() {
 	ifstream timefile;
 	ifstream meanfile;
 	ofstream plotfile;
+  if (mkdir("Performance/mean/", 0777) == -1){
+    cerr << "Error :  Performance/mean " << strerror(errno) << endl;
+  }
+  if (mkdir("Performance/sd/", 0777) == -1){
+    cerr << "Error :  Performance/sd " << strerror(errno) << endl;
+  }
 	for (int type=0; type<4; type++){
 		for (int k_size = 3; k_size < 11; k_size+=2){
 			// int type = 0, k_size = 3;

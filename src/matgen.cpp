@@ -12,8 +12,11 @@ using namespace std;
 int main(){
   int range = 1000; //from -range to +range
   int mat_size = 300;
+  if (mkdir("Performance/matrix/", 0777) == -1){
+      cerr << "Error :  " << strerror(errno) << endl;
+    }
   for (int i = 1; i <= mat_size;i++){
-    if (mkdir(("Performance/matrix/"+to_string(i)+"x"+to_string(i)).c_str(), 0777) == -1){
+      if (mkdir(("Performance/matrix/"+to_string(i)+"x"+to_string(i)).c_str(), 0777) == -1){
           cerr << "Error :  " << strerror(errno) << endl;
         } 
       else{
