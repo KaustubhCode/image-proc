@@ -36,11 +36,11 @@ Description of each file in `/src`:
   > $ ./bin/main conv_mult_with_pad matrix1.txt 6 matrix2.txt 3 1 pthread
 - Use `./bin/main [operator name] -h` to get help on the particular operation.
 - For generating matrices, use 
-  > $ ./bin/matgen
+  ``` $ ./bin/matgen ```
 - For evaluating generated matrices in 'data' folder use:
-  > $ ./bin/evaluate
+  ``` $ ./bin/evaluate ```
 - For calculating time & standard deviation from './data/time/' use:
-  > $ ./bin/mean
+  ``` $ ./bin/mean ```
 
 ### Notes
 
