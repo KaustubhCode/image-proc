@@ -20,8 +20,8 @@ Description of each file in `/src`:
 - Boost library (*Note*: It is only required for better user interface/program options, not for processing)
   ```
   $ sudo apt-get install libboost-all-dev
-  $ sudo apt-get update ```
-  
+  $ sudo apt-get update 
+  ```
 - Intel MKL library (for matrix multiplication)
   - Download library from Intel mkl site.
   - Link it using (Change  `/opt/intel` if intel library not downloaded in `/opt`)
