@@ -13,14 +13,14 @@ int main(){
   int range = 1000; //from -range to +range
   int mat_size = 300;
   for (int i = 1; i <= mat_size;i++){
-    if (mkdir(("matrix/"+to_string(i)+"x"+to_string(i)).c_str(), 0777) == -1){
+    if (mkdir(("Performance/matrix/"+to_string(i)+"x"+to_string(i)).c_str(), 0777) == -1){
           cerr << "Error :  " << strerror(errno) << endl;
         } 
       else{
           cout << "Directory created" << i << "x" << i << endl; 
       }
   
-      string dir = "./matrix/";
+      string dir = "./Performance/matrix/";
       dir += to_string(i)+"x"+to_string(i) + "/";
 
       cout << "Entered Directory" << dir << endl;
