@@ -35,7 +35,7 @@ DEPS = $(patsubst %,$(IDIR)/%,$(_DEPS))
 _OBJ = main.o imgOp.o
 OBJ = $(patsubst %,$(ODIR)/%,$(_OBJ))
 
-all: $(EDIR)/main $(EDIR)/evaluator
+all: $(EDIR)/main $(EDIR)/evaluator $(EDIR)/matgen $(EDIR)/mean
 
 $(ODIR)/%.o: $(SDIR)/%.cpp $(DEPS)
 	$(CC) -c -o $@ $< $(CFLAGS)
@@ -50,6 +50,19 @@ $(ODIR)/evaluator.o: $(SDIR)/evaluator.cpp
 $(EDIR)/evaluator: $(ODIR)/evaluator.o
 	$(CC) -o $@ $^ $(CFLAGS)
 
+# Matrix Generator
+$(ODIR)/matgen.o: $(SDIR)/matgen.cpp
+	$(CC) -c -o $@ $< $(CFLAGS)
+
+$(EDIR)/matgen: $(ODIR)/matgen.o
+	$(CC) -o $@ $^ $(CFLAGS)
+
+# Matrix Generator
+$(ODIR)/mean.o: $(SDIR)/mean.cpp
+	$(CC) -c -o $@ $< $(CFLAGS)
+
+$(EDIR)/mean: $(ODIR)/mean.o
+	$(CC) -o $@ $^ $(CFLAGS)
 .PHONY: clean
 
 clean:
