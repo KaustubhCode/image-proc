@@ -10,7 +10,7 @@ namespace mkl{
 }
 using namespace std;
 
-#define MAX_THREAD 4
+#define MAX_THREAD 8
 
 typedef vector<float> Array;
 typedef vector<Array> Matrix;
@@ -91,24 +91,6 @@ Matrix mult_openblas(Matrix proc_image, Array proc_ker, int n, int m){
     for (int i=0; i<A_cols; i++){
         B[i]=proc_ker[i];
     }
-    // cout << "Printing A" << endl;
-    // for (int i=0; i<A_rows; i++){
-    //     for (int j=0; j<A_cols; j++){
-    //         cout << A[i*A_cols+j] << " ";
-    //     }
-    //     cout << endl;
-    // }
-    // cout << endl << endl;
-    // cout << "Printing B" << endl;
-    // for (int i=0; i<A_cols; i++){
-    //     cout << B[i] << " ";
-    // }
-    // cout << endl << endl;
-    // display(proc_image);
-    // Error, width and height should match!
-    // assert(A_width == B_height);
-
-    // http://www.netlib.org/lapack/explore-html/d7/d2b/dgemm_8f.html
     openblas::cblas_sgemv(openblas::CblasRowMajor, openblas::CblasNoTrans, A_rows, A_cols, 1.0, A, A_cols, B, 1, 0, AB, 1);
     
     Matrix ans(n, Array(n));
@@ -117,11 +99,7 @@ Matrix mult_openblas(Matrix proc_image, Array proc_ker, int n, int m){
             ans[i][j]=AB[i*n+j];
         }
     }
-    // cout << " ========= " << endl;
-    // for (int i=0; i<n*n; i++){
-    //     cout << AB[i] << " ";
-    // }
-    // cout << " ========= " << endl;
+
     free(A);
     free(B);
     free(AB);
@@ -283,7 +261,7 @@ Matrix conv_mult_pad(Matrix mat, Matrix ker, int n, int m, int p, int s = 1, int
 
     //return mult_openblas(proc_image,proc_ker, newsz, m);
     //return mult_mkl(proc_image,proc_ker, newsz, m);
-    return mult_pthread(proc_image,proc_ker,newsz,m);
+    //return mult_pthread(proc_image,proc_ker,newsz,m);
     //return simple_multiplication(proc_image,proc_ker,newsz,m);
 }   
 

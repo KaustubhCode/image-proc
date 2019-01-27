@@ -13,60 +13,47 @@
 using namespace std;
 
 int main() {
+    int START_SIZE=10;
+    int END_SIZE=1000;
+    int MAT_INC=10;
+    int TEST_CASES=10;
+    
+    int KER_INC=2;
+    int KER_MAX_SIZE=9;
+    int KER_MIN_SIZE=3;
+    
 	int total=3000;
 	int trials = 10;
 	string mult[4] = {"simple", "openblas", "mkl", "pthread"};
 	ifstream timefile;
-	ifstream meanfile;
-	ofstream plotfile;
-  if (mkdir("Performance/mean/", 0777) == -1){
-    cerr << "Error :  Performance/mean " << strerror(errno) << endl;
-  }
-  if (mkdir("Performance/sd/", 0777) == -1){
-    cerr << "Error :  Performance/sd " << strerror(errno) << endl;
-  }
+	ofstream meanfile;
+    
+    if (mkdir("data/mean_sd/", 0777) == -1){
+    cerr << "Error :  data/mean_sd " << strerror(errno) << endl;
+    }
 	for (int type=0; type<4; type++){
-		for (int k_size = 3; k_size < 11; k_size+=2){
-			// int type = 0, k_size = 3;
-			timefile.open("Performance/time/time_"+mult[type]+"_"+to_string(k_size)+".txt");
-			plotfile.open("Performance/mean/mean_"+mult[type]+"_"+to_string(k_size)+".txt");
-			int mean=0;
-			for (int m = 0; m<total-(k_size-1)*10; m++){
-				int tmp, size;
-				timefile >> tmp >> size;
-				mean += tmp;
-				// cout << m+1 << " entry: " << mean << " " << size << endl;
-				if ((m+1)%trials == 0){
-					mean /= trials;
-					plotfile << mean << " " << size << endl;
-					mean = 0;
-				}
-			}
-			timefile.close();
-			plotfile.close();
-		}
-	}
-	for (int type=0; type<4; type++){
-		for (int k_size = 3; k_size < 11; k_size+=2){
-			timefile.open("Performance/time/time_"+mult[type]+"_"+to_string(k_size)+".txt");
-			meanfile.open("Performance/mean/mean_"+mult[type]+"_"+to_string(k_size)+".txt");
-			plotfile.open("Performance/sd/sd_"+mult[type]+"_"+to_string(k_size)+".txt");
-			float sdev=0;
-			for (int m = 0; m<total/trials-(k_size-1); m++){
-				int tmp, size, mean;
-				meanfile >> mean >> size;
-				cout << m+1 << " entry: " << mean << " " << size << endl;
-				for (int t=0; t<trials; t++){
-					timefile >> tmp >> size;
-					sdev += (tmp-mean)*(tmp-mean);
-				}
-				sdev = sqrt(sdev);
-				plotfile << sdev << " " << size << endl;
-				sdev = 0;
-			}
+		for (int k_size = KER_MIN_SIZE; k_size <= KER_MAX_SIZE; k_size= k_size+KER_INC){
+			timefile.open("data/time/time_"+mult[type]+"_"+to_string(k_size)+".txt");
+			meanfile.open("data/mean_sd/mean_sd_"+mult[type]+"_"+to_string(k_size)+".txt");
+            for (int mat_size=START_SIZE; mat_size<=END_SIZE; mat_size=mat_size+MAT_INC){
+                float tmp_time[TEST_CASES];
+                float mean = 0;
+                int size;
+                for (int i=0; i<TEST_CASES; i++){
+                    timefile >> tmp_time[i] >> size;
+                    mean += tmp_time[i];
+                }
+                mean = mean/TEST_CASES;
+                float sd = 0;
+                for (int i=0; i<TEST_CASES; i++){
+                    sd += (mean - tmp_time[i])*(mean - tmp_time[i]);
+                }
+                sd = sqrt(sd/TEST_CASES);
+                meanfile << size << " " << mean << " "<< sd << endl;;
+            }
 			timefile.close();
 			meanfile.close();
-			plotfile.close();
 		}
 	}
+    
 }

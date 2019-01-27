@@ -22,20 +22,23 @@ string exec(const char* cmd) {
 }
 
 int main() {
-	int mat_size=300;
+	int mat_size=1000;
+	int step = 10;
+
 	string mult[4] = {"simple", "openblas", "mkl", "pthread"};
 	ofstream timefile;
-	for (int size_2=3; size_2<11; size_2+=2){
+
+	for (int size_ker=3; size_ker<11; size_ker+=2){
 		for (int i=0; i<4; i++){
-			string outfile = "Performance/time/time_"+mult[i]+"_"+to_string(size_2)+".txt";
+			string outfile = "data/time/time_"+mult[i]+"_"+to_string(size_ker)+".txt";
 			timefile.open(outfile);	// Open File to write
-			string fn_input_2 = "Performance/ker/"+to_string(size_2)+".txt";
-			for (int size_1=1; size_1<=mat_size; size_1++){
+			string fn_input_2 = "data/ker/"+to_string(size_ker)+".txt";
+			for (int size_image=10; size_image<=mat_size; size_image = size_image + step){
 				for (int l=1; l<=10; l++){
-					cout << "Type: " << mult[i] << " Kernel: " << size_2 << " Mat: " << size_1 << " Case: " << l << endl;
-					string fn_input_1 = "Performance/matrix/"+to_string(size_1)+"x"+to_string(size_1)+"/"+to_string(l)+".txt";
+					cout << "Type: " << mult[i] << " Kernel: " << size_ker << " Mat: " << size_image << " Case: " << l << endl;
+					string fn_input_1 = "data/matrix/"+to_string(size_image)+"x"+to_string(size_image)+"/"+to_string(l)+".txt";
 					// Executing Main File
-					string cmd = "./bin/main conv_mult_with_pad " +fn_input_1+ " " +to_string(size_1)+ " " +fn_input_2+ " " +to_string(size_2)+ " 1 " +mult[i];
+					string cmd = "./bin/main conv_mult_with_pad " +fn_input_1+ " " +to_string(size_image)+ " " +fn_input_2+ " " +to_string(size_ker)+ " 1 " +mult[i];
 				  cout << cmd << endl;
 				  cout << outfile << endl;
 				  const char* c_cmd = cmd.c_str();
@@ -49,7 +52,7 @@ int main() {
 				  try{
 				  	if (first > 5){
 						  string final = res.substr(first, last-first);
-						  timefile << final << " " << size_1 << endl;
+						  timefile << final << " " << size_image << endl;
 						}
 					}catch(exception e){
 						cout << "Invalid" << endl;

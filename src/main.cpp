@@ -352,9 +352,9 @@ int main(int argc, char** argv)
 
 // EXAMPLE USAGE
 /*op_no    op_name
-0	./bin/main operation pad_size inp1 inp1_size inp2 inp2_size
+0	./bin/main operation inp1 inp1_size inp2 inp2_size pad_size
 1	./bin/main operation inp1 inp1_size inp2 inp2_size
-2	./bin/main operation pad_size inp1 inp1_size inp2 inp2_size
+2	./bin/main operation inp1 inp1_size inp2 inp2_size pad_size 
 3	./bin/main operation inp1 inp1_size inp2 inp2_size
 4	./bin/main operation inp1 inp1_size box_size
 5	./bin/main operation inp1 inp1_size box_size

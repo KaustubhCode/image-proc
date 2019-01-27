@@ -11,22 +11,21 @@ using namespace std;
 
 int main(){
   int range = 1000; //from -range to +range
-  int mat_size = 300;
-  if (mkdir("Performance/matrix/", 0777) == -1){
+  int mat_size = 1000;
+  if (mkdir("data/matrix/", 0777) == -1){
       cerr << "Error :  " << strerror(errno) << endl;
     }
-  for (int i = 1; i <= mat_size;i++){
-      if (mkdir(("Performance/matrix/"+to_string(i)+"x"+to_string(i)).c_str(), 0777) == -1){
+  for (int i = 10; i <= mat_size;i=i+10){
+      if (mkdir(("data/matrix/"+to_string(i)+"x"+to_string(i)).c_str(), 0777) == -1){
           cerr << "Error :  " << strerror(errno) << endl;
         } 
       else{
-          cout << "Directory created" << i << "x" << i << endl; 
+          cout << "Directory created " << i << "x" << i << endl; 
       }
   
-      string dir = "./Performance/matrix/";
+      string dir = "./data/matrix/";
       dir += to_string(i)+"x"+to_string(i) + "/";
 
-      cout << "Entered Directory" << dir << endl;
       for (int j = 0; j < 10; j++){
         ofstream file;
         string fname = dir + to_string(j+1) + ".txt";
@@ -36,7 +35,7 @@ int main(){
         }
         file.close();
       }
-      cout << "Directory  " << i << " completed" << endl; 
+      cout << "Directory " << i << " completed" << endl; 
   }
   return 0;
 

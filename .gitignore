@@ -30,4 +30,4 @@
 *.out
 *.app
 
-Performance/matrix
+data/matrix

@@ -8,9 +8,9 @@ Image processing library with functions (in src/imgOp) like convolution with a k
 Description of each file in `/src`:
 - `main.cpp` - Takes in user input and calls `imgOp.cpp` for applying operations.
 - `imgOp.cpp` - Contains all the required functions for the image processing.
-- `matgen.cpp` - Creates 10 matrices of sizes from range 1 to `mat_size` with random integer elements from range `-range` to `+range`. All these matrices are stored in the `./data/matrix` folder.
+- `matgen.cpp` - Creates 10 matrices of sizes from range 10 to `mat_size` with random integer elements from range `-range` to `+range` with `step`. All these matrices are stored in the `./data/matrix` folder.
 - `evaluator.cpp` - Evaluated all the matrices in the `./data/matrix` for convolution using matrix multiplication using kernels from `./data/ker`. It stores the time in the evaluation inside `./data/mean`. First column is time and second column is matrix size n.
-- `main.cpp` -  Calculates mean and standard deviations of times (for each size) and stores them in `./data/mean` and `./data/sd` respectively. First column has mean/standard deviation and second column is matrix size n.
+- `mean.cpp` -  Calculates mean and standard deviations of times (for each size) and stores them in `./data/mean_sd` respectively. First column has matrix size n, second is mean & third is standard deviation.
 
 ## Getting Started
 
@@ -35,6 +35,7 @@ Description of each file in `/src`:
 - Use `./bin/main -h` for help on different instructions. Example:-
   > $ ./bin/main conv_mult_with_pad matrix1.txt 6 matrix2.txt 3 1 pthread
 - Use `./bin/main [operator name] -h` to get help on the particular operation.
+- For checking how many thread should be use, type `lscpu` in `bash`. Multiply number of threads/core * cores/socket * socket to get required number of threads. Change `MAX_THREAD` at the top of `imgOp.cpp` to the same.
 - For generating matrices, use 
   ``` $ ./bin/matgen ```
 - For evaluating generated matrices in 'data' folder use:
@@ -53,61 +54,61 @@ Description of each file in `/src`:
 
 Command Syntax
 
-```./bin/main conv_with_pad [pad_size] [input_filename_1] [inputsize_1] [filename_2] [inputsize_2] ```
+```./bin/main conv_with_pad [input_filename_1] [inputsize_1] [filename_2] [inputsize_2] [pad_size] {stride}```
 
 Example Command
 
-> ./bin/main conv_with_pad 1 matrix1.txt 6 matrix2.txt 3
+> ./bin/main conv_with_pad 1 ./data/matrix/matrix1.txt 6 ./data/matrix/matrix2.txt 3
 
 2. Convolution without padding
 
 Command Syntax
 
-```./bin/main conv_without_pad [input_filename_1] [inputsize_1] [filename_2] [inputsize_2] ```
+```./bin/main conv_without_pad [input_filename_1] [inputsize_1] [filename_2] [inputsize_2] {stride}```
 
 Example Command
 
-> ./bin/main conv_without_pad matrix1.txt 6 matrix2.txt 3
+> ./bin/main conv_without_pad ./data/matrix/matrix1.txt 6 ./data/matrix/matrix2.txt 3
 
 3. Convolution with padding using matrix multiplication
 
 Command Syntax
 
-```./bin/main conv_mult_with_pad [pad_size] [input_filename_1] [inputsize_1] [filename_2] [inputsize_2] ```
+```./bin/main conv_mult_with_pad [input_filename_1] [inputsize_1] [filename_2] [inputsize_2] [pad_size] {stride}```
 
 Example Command
 
-> ./bin/main conv_mult_with_pad 1 matrix1.txt 6 matrix2.txt 3
+> ./bin/main conv_mult_with_pad 1 ./data/matrix/matrix1.txt 6 ./data/matrix/matrix2.txt 3
 
 4. Convolution without padding using matrix multiplication
 
 Command Syntax
 
-```./bin/main conv_mult_without_pad [input_filename_1] [inputsize_1] [filename_2] [inputsize_2] ```
+```./bin/main conv_mult_without_pad [input_filename_1] [inputsize_1] [filename_2] [inputsize_2] {stride}```
 
 Example Command
 
-> ./bin/main conv_mult_without_pad matrix1.txt 6 matrix2.txt 3
+> ./bin/main conv_mult_without_pad ./data/matrix/matrix1.txt 6 ./data/matrix/matrix2.txt 3
 
 5. Max Pooling
 
 Command Syntax
 
-```./bin/main max_pool [input_filename_1] [inputsize_1] [box_size] ```
+```./bin/main max_pool [input_filename_1] [inputsize_1] [box_size] {stride}```
 
 Example Command
 
-> ./bin/main max_pool matrix1.txt 6 2
+> ./bin/main max_pool ./data/matrix/matrix1.txt 6 2
 
 6. Average Pooling
 
 Command Syntax
 
-```./bin/main avg_pool [input_filename_1] [inputsize_1] [box_size] ```
+```./bin/main avg_pool [input_filename_1] [inputsize_1] [box_size] {stride}```
 
 Example Command
 
-> ./bin/main avg_pool matrix1.txt 6 2
+> ./bin/main avg_pool ./data/matrix/matrix1.txt 6 2
 
 7. Relu activation
 
@@ -117,7 +118,7 @@ Command Syntax
 
 Example Command
 
-> ./bin/main relu matrix2.txt 3
+> ./bin/main relu ./data/matrix/matrix2.txt 3
 
 8. tanh activation
 
@@ -127,7 +128,7 @@ Command Syntax
 
 Example Command
 
-> ./bin/main tanh matrix2.txt 3
+> ./bin/main tanh ./data/matrix/matrix2.txt 3
 
 9. Sigmoid on vector
 
@@ -137,7 +138,7 @@ Command Syntax
 
 Example Command
 
-> ./bin/main sigmoid vector1.txt 3
+> ./bin/main sigmoid ./data/matrix/vector1.txt 3
 
 10. Softmax on vector
 
@@ -147,7 +148,13 @@ Command Syntax
 
 Example Command
 
-> ./bin/main softmax vector1.txt 3
+> ./bin/main softmax ./data/matrix/vector1.txt 3
+
+## Examples
+
+- Some examples of matrices, vectors are present in `./data/matrix`
+- We have also run convolution with matrix multiplication using 4 types of kernels (in `./data/ker`) and 4 techniques and saved the times (in microsecond) in `./data/time` folder. Their mean and standard values are also in a file named `./data/mean_sd`. The files are appropriately named.
+- Time vs size plots of the above matrices are stored in `/data/plot`.  
 
 ## Authors
 
