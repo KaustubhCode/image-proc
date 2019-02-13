@@ -46,11 +46,11 @@ $(EDIR)/mean: $(ODIR)/mean.o
 	$(CC) -o $@ $^ $(CFLAGS) $(OPENBLAS) $(BOOST) $(MKL)
 
 # lenet
-$(ODIR)/lenet.o: $(SDIR)/lenet.cpp
-	$(CC) -c -o $@ $< $(CFLAGS)
+$(ODIR)/lenet.o: $(SDIR)/lenet.cpp $(DEPS)
+	$(CC) -c -o $@ $< $(CFLAGS) $(OPENBLAS) $(BOOST) $(MKL)
 
 $(EDIR)/lenet: $(ODIR)/lenet.o
-	$(CC) -o $@ $^ $(CFLAGS)
+	$(CC) -o $@ $^ $(CFLAGS) $(OPENBLAS) $(BOOST) $(MKL)
 
 
 .PHONY: clean

@@ -2,6 +2,7 @@
 #include <vector>
 #include <bits/stdc++.h> // for tanh, max and exp functions
 #include <pthread.h>
+#include "imgOp.h"
 namespace openblas{
     #include <cblas.h>
 }
@@ -183,7 +184,7 @@ Matrix mult_pthread(Matrix proc_image, Array proc_ker, int n, int m){
 }
 
 // Convolution with padding (matrix)
-Matrix conv_pad(Matrix mat, Matrix ker, int n, int m, int p, int s = 1){
+Matrix conv_pad(Matrix mat, Matrix ker, int n, int m, int p, int s /*= 1*/){
 
     int newsz = (n-m+2*p)/s +1;
     
@@ -212,11 +213,11 @@ Matrix conv_pad(Matrix mat, Matrix ker, int n, int m, int p, int s = 1){
 }
 
 // Convolution without padding (matrix)
-Matrix conv(Matrix mat, Matrix ker, int n, int m, int s = 1){
+Matrix conv(Matrix mat, Matrix ker, int n, int m, int s /*= 1*/){
     return conv_pad(mat,ker,n,m,0,s);
 }
 
-Matrix conv_mult_pad(Matrix mat, Matrix ker, int n, int m, int p, int s = 1, int mult = 0){
+Matrix conv_mult_pad(Matrix mat, Matrix ker, int n, int m, int p, int s /*= 1*/, int mult /*= 0*/){
     int newsz = (n-m+2*p)/s+1;
     int n_pad = n+2*p;
     Matrix padimage(n_pad, Array(n_pad));
@@ -265,11 +266,11 @@ Matrix conv_mult_pad(Matrix mat, Matrix ker, int n, int m, int p, int s = 1, int
     //return simple_multiplication(proc_image,proc_ker,newsz,m);
 }   
 
-Matrix conv_mult(Matrix mat, Matrix ker, int n, int m, int s = 1, int mult = 0){
+Matrix conv_mult(Matrix mat, Matrix ker, int n, int m, int s /*= 1*/, int mult /*= 0*/){
     return conv_mult_pad(mat,ker,n,m,0,s);
 }
 
-Matrix maxPooling(Matrix mat, int n, int f, int s = 1){
+Matrix maxPooling(Matrix mat, int n, int f, int s /*= 1*/){
 
     int newsz = (n-f)/s+1;
     Matrix ans(newsz,Array(newsz));
@@ -289,7 +290,7 @@ Matrix maxPooling(Matrix mat, int n, int f, int s = 1){
     return ans;
 }
 
-Matrix avgPooling(Matrix mat, int n, int f, int s = 1){
+Matrix avgPooling(Matrix mat, int n, int f, int s /*= 1*/){
 
     int newsz = (n-f)/s+1;
     Matrix ans(newsz,Array(newsz));

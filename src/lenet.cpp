@@ -5,8 +5,7 @@
 // #include <unistd.h>
 #include <string.h>
 #include <vector>
-#include "imgOp.h"
-
+#include "imgOp.cpp"
 // #include <boost/program_options.hpp>
 // #include <boost/filesystem.hpp>
 // #include <chrono> 
