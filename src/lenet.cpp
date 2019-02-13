@@ -8,18 +8,64 @@
 // #include <boost/program_options.hpp>
 // #include <boost/filesystem.hpp>
 // #include <chrono> 
-// #include "imgOp.h"
+#include "imgOp.h"
 
 using namespace std;
 typedef vector<float> Array;
 typedef vector<Array> Matrix;
 typedef vector<Matrix> Feature;
 typedef vector<Feature> FList;
-
-Matrix conv3d(Feature in, Feature ker, int pad, int stride){}
-Matrix bias(Matrix in, float b){}
-Feature relu3d(Feature in){}
-Feature maxpool3d(Feature input, int kernel, int stride);
+ 
+//nxnxk feature (k matrices)
+Matrix conv3d(Feature input, Feature ker, int pad, int stride){
+	int n = input[0].size;
+	int newsz = ((n - ker.size() + 2*pad)/stride) + 1;
+	Matrix output(newsz,Array(newsz));
+	for (int i = 0; i < input.size();i++){
+		Matrix out = conv_mult_pad(input[i],ker,n,ker.size(),pad,stride);
+		for (int j = 0; j < n; j++){
+			for (int k = 0; k < n; k++){
+				output[j][k] = output[j][k] + out[j][k];
+			}
+		}
+	}
+	return output;
+}
+Matrix bias(Matrix input, float b){
+	for (int j = 0; j < n; j++){
+		for (int k = 0; k < n; k++){
+			input[j][k] = input[j][k] + b;
+		}
+	}
+	return input;
+}
+Feature relu3d(Feature input){
+	int n = input[0].size;
+	for (int i = 0; i < input.size();i++){
+		for (int j = 0; j < n; j++){
+			for (int k = 0; k < n; k++){
+				if (input[i][j][k] <= 0){
+					input[i][j][k] = 0;
+				}
+			}
+		}
+	}
+	return input;
+}
+Feature maxpool3d(Feature input, int kernel, int stride){
+	int n = input[0].size;
+	int newsz = ((n - kernel + 2*pad)/stride) + 1;
+	Matrix output(newsz,Array(newsz));
+	for (int i = 0; i < input.size();i++){
+		Matrix out = maxPooling(input[i],n,kernel,stride);
+		for (int j = 0; j < n; j++){
+			for (int k = 0; k < n; k++){
+				output[j][k] = output[j][k] + out[j][k];
+			}
+		}
+	}
+	return output;
+}
 
 class lenet{
 	public:
