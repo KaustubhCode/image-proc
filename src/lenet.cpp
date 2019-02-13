@@ -5,10 +5,11 @@
 // #include <unistd.h>
 #include <string.h>
 #include <vector>
+#include "imgOp.h"
+
 // #include <boost/program_options.hpp>
 // #include <boost/filesystem.hpp>
 // #include <chrono> 
-#include "imgOp.h"
 
 using namespace std;
 typedef vector<float> Array;
@@ -18,11 +19,11 @@ typedef vector<Feature> FList;
  
 //nxnxk feature (k matrices)
 Matrix conv3d(Feature input, Feature ker, int pad, int stride){
-	int n = input[0].size;
+	int n = input[0].size();
 	int newsz = ((n - ker.size() + 2*pad)/stride) + 1;
 	Matrix output(newsz,Array(newsz));
 	for (int i = 0; i < input.size();i++){
-		Matrix out = conv_mult_pad(input[i],ker,n,ker.size(),pad,stride);
+		Matrix out = conv_mult_pad(input[i],ker[i],n,ker.size(),pad,stride);
 		for (int j = 0; j < n; j++){
 			for (int k = 0; k < n; k++){
 				output[j][k] = output[j][k] + out[j][k];
@@ -32,6 +33,7 @@ Matrix conv3d(Feature input, Feature ker, int pad, int stride){
 	return output;
 }
 Matrix bias(Matrix input, float b){
+	int n = input.size();
 	for (int j = 0; j < n; j++){
 		for (int k = 0; k < n; k++){
 			input[j][k] = input[j][k] + b;
@@ -40,7 +42,7 @@ Matrix bias(Matrix input, float b){
 	return input;
 }
 Feature relu3d(Feature input){
-	int n = input[0].size;
+	int n = input[0].size();
 	for (int i = 0; i < input.size();i++){
 		for (int j = 0; j < n; j++){
 			for (int k = 0; k < n; k++){
@@ -53,18 +55,11 @@ Feature relu3d(Feature input){
 	return input;
 }
 Feature maxpool3d(Feature input, int kernel, int stride){
-	int n = input[0].size;
-	int newsz = ((n - kernel + 2*pad)/stride) + 1;
-	Matrix output(newsz,Array(newsz));
+	int n = input[0].size();
 	for (int i = 0; i < input.size();i++){
-		Matrix out = maxPooling(input[i],n,kernel,stride);
-		for (int j = 0; j < n; j++){
-			for (int k = 0; k < n; k++){
-				output[j][k] = output[j][k] + out[j][k];
-			}
-		}
+		input[i] = maxPooling(input[i],n,kernel,stride);
 	}
-	return output;
+	return input;
 }
 
 class lenet{

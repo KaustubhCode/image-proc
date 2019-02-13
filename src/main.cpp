@@ -306,9 +306,6 @@ int main(int argc, char** argv)
 		Matrix convImage = conv(mat1,mat2,inp_1_size,inp_2_size,stride);
 		display(convImage);
 	}else if (op_no == 2){
-
-		
-
 		auto start = high_resolution_clock::now();
 		// Matrix convImage = conv_mult_pad(mat1,mat2,inp_1_size,inp_2_size,padsize,stride);
 		Matrix convImage = conv_mult_pad(mat1,mat2,inp_1_size,inp_2_size,padsize,stride,mult_method);
