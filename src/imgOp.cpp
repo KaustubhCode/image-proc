@@ -242,7 +242,7 @@ Matrix conv_mult_pad(Matrix mat, Matrix ker, int n, int m, int p, int s /*= 1*/,
     Array proc_ker(m*m);
     for(int k = 0; k < m; k++){
         for(int l = 0; l < m; l++){
-            proc_ker[k*m+l] = ker[m-k-1][m-l-1];
+            proc_ker[k*m+l] = ker[k][l];
         }
     }
 
@@ -277,7 +277,7 @@ Matrix maxPooling(Matrix mat, int n, int f, int s /*= 1*/){
 
     for (int i = 0; i < (n-f)/s + 1; i++){
         for (int j = 0; j < (n-f)/s + 1; j++){
-            float max = mat[i][j];
+            float max = mat[i*s][j*s];
             for (int k = 0; k < f; k++){
                 for (int l = 0; l < f; l++){
                     max = (mat[i*s+k][j*s+l] > max) ? mat[i*s+k][j*s+l] : max;

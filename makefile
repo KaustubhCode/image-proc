@@ -4,7 +4,7 @@ BOOST = -lboost_program_options -lboost_system
 MKL = -fopenmp -m64 -I${MKLROOT}/include -Wl,--no-as-needed -L${MKLROOT}/lib/intel64 -lmkl_intel_lp64 -lmkl_core -lmkl_gnu_thread -lpthread -lm -ldl
 IDIR = ./include
 CC = g++
-CFLAGS = -I$(IDIR) -std=c++11
+CFLAGS = -I$(IDIR) -std=c++11 -g
 
 ODIR = ./build
 EDIR = ./bin
@@ -49,7 +49,7 @@ $(EDIR)/mean: $(ODIR)/mean.o
 $(ODIR)/lenet.o: $(SDIR)/lenet.cpp $(DEPS)
 	$(CC) -c -o $@ $< $(CFLAGS) $(OPENBLAS) $(BOOST) $(MKL)
 
-$(EDIR)/lenet: $(ODIR)/lenet.o
+$(EDIR)/lenet: $(ODIR)/lenet.o $(ODIR)/imgOp.o
 	$(CC) -o $@ $^ $(CFLAGS) $(OPENBLAS) $(BOOST) $(MKL)
 
 
