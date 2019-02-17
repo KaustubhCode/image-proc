@@ -1,9 +1,14 @@
 #include <iostream>
 #include <fstream>
 #include <stdlib.h>
+#include <sys/stat.h>
 #include <algorithm>	// for sort
 #include <string.h>
 #include <vector>
+#include <string>
+#include <sys/types.h>
+#include <bits/stdc++.h>
+#include <stdio.h> 
 #include "imgOp.h"
 
 using namespace std;
@@ -12,12 +17,12 @@ typedef vector<Array> Matrix;
 typedef vector<Matrix> Feature;
 typedef vector<Feature> FList;
  
-Matrix conv3d(Feature input, Feature ker, int pad, int stride){
+Matrix conv3d(Feature input, Feature ker, int pad, int stride, int mult=1){
 	int n = input[0].size();
 	int newsz = ((n - ker[0].size() + 2*pad)/stride) + 1;
 	Matrix output(newsz,Array(newsz));
 	for (int i = 0; i < input.size();i++){
-		Matrix out = conv_mult_pad(input[i],ker[i],n,ker[0].size(),pad,stride);
+		Matrix out = conv_mult_pad(input[i],ker[i],n,ker[0].size(),pad,stride,mult);
 		for (int j = 0; j < newsz; j++){
 			for (int k = 0; k < newsz; k++){
 				output[j][k] = output[j][k] + out[j][k];
@@ -77,6 +82,7 @@ class lenet{
 	vector<float> fc_1_bias;
 	FList fc_2_ker;
 	vector<float> fc_2_bias;
+	int mult=1;
 
 	void load_conv_1(string filename){
 		int NO_OF_FILTERS=20;
@@ -196,7 +202,7 @@ class lenet{
 		int OUTPUT_DIM = (INPUT_DIM-KERNEL_SIZE+2*PADDING)/STRIDE + 1;
 		Feature out(NO_OF_FILTERS, Matrix(OUTPUT_DIM, Array(OUTPUT_DIM)));
 		for (int i=0; i<NO_OF_FILTERS; i++){
-			Matrix mat = conv3d(input, conv_1_ker[i], PADDING, STRIDE);
+			Matrix mat = conv3d(input, conv_1_ker[i], PADDING, STRIDE,mult);
 			mat = bias(mat, conv_1_bias[i]);
 			out[i]=mat;
 		}
@@ -213,7 +219,7 @@ class lenet{
 		int OUTPUT_DIM = (INPUT_DIM-KERNEL_SIZE+2*PADDING)/STRIDE + 1;
 		Feature out(NO_OF_FILTERS, Matrix(OUTPUT_DIM, Array(OUTPUT_DIM)));
 		for (int i=0; i<NO_OF_FILTERS; i++){
-			Matrix mat = conv3d(input, conv_2_ker[i], PADDING, STRIDE);
+			Matrix mat = conv3d(input, conv_2_ker[i], PADDING, STRIDE,mult);
 			mat = bias(mat, conv_2_bias[i]);
 			out[i]=mat;
 		}
@@ -252,7 +258,7 @@ class lenet{
 		int OUTPUT_DIM = (INPUT_DIM-KERNEL_SIZE+2*PADDING)/STRIDE + 1;
 		Feature out(NO_OF_FILTERS, Matrix(OUTPUT_DIM, Array(OUTPUT_DIM)));
 		for (int i=0; i<NO_OF_FILTERS; i++){
-			Matrix mat = bias(conv3d(input, fc_1_ker[i], PADDING, STRIDE), fc_1_bias[i]);
+			Matrix mat = bias(conv3d(input, fc_1_ker[i], PADDING, STRIDE,mult), fc_1_bias[i]);
 			out[i]=mat;
 		}
 		Feature relu_out = relu3d(out);
@@ -270,7 +276,7 @@ class lenet{
 		int OUTPUT_DIM = (INPUT_DIM-KERNEL_SIZE+2*PADDING)/STRIDE + 1;
 		Feature out(NO_OF_FILTERS, Matrix(OUTPUT_DIM, Array(OUTPUT_DIM)));
 		for (int i=0; i<NO_OF_FILTERS; i++){
-			Matrix mat = bias(conv3d(input, fc_2_ker[i], PADDING, STRIDE), fc_2_bias[i]);
+			Matrix mat = bias(conv3d(input, fc_2_ker[i], PADDING, STRIDE,mult), fc_2_bias[i]);
 			out[i]=mat;
 		}
 		return out;
@@ -280,18 +286,22 @@ class lenet{
 		Feature input(CHANNELS,Matrix(HEIGHT, Array(WIDTH)));
 		ifstream streamFile;
 		streamFile.open(filename);
-		ofstream tt("test_inp.txt");
+		ofstream tempFile;
+		tempFile.open("./data/lenet_data/test.txt",ios::out);
 		if (streamFile.good()){
 			for (int i=0; i<CHANNELS; i++){
 				for (int j=0; j<HEIGHT; j++){
 					for (int k=0; k<WIDTH; k++){
 						streamFile >> input[i][j][k];
 						input[i][j][k] = 1 - input[i][j][k]/255; // Normalize and revert image
-						tt << input[i][j][k] << endl;
+						tempFile << input[i][j][k] << endl;
 					}
 				}
 			}
 		}
+
+		streamFile.close();
+
 		Feature conv1, conv2, pool1, pool2, fc1, fc2;
 		conv1 = this->run_conv_1(input);
 		// cout << "Conv1 Dim: " << conv1.size() << " " << conv1[0].size() << " " << conv1[0][0].size() << endl;
@@ -310,25 +320,58 @@ class lenet{
 			fc_vec[i]=fc2[i][0][0];
 		}
 		vector<float> sfmax = softmax(fc_vec, fc_vec.size());
+		remove("./data/lenet_data/test.txt");
 		return sfmax;
 	}
 };
 
-int main(){
+int main(int argc, char** argv){
 	lenet net;
-	net.load_conv_1("lenet_weights/conv1.txt");
-	net.load_conv_2("lenet_weights/conv2.txt");
-	net.load_fc_1("lenet_weights/fc1.txt");
-	net.load_fc_2("lenet_weights/fc2.txt");
-	vector<float> out = net.run("sample/1/1_new.txt", 1, 28, 28);
+	net.load_conv_1("./data/lenet_weights/conv1.txt");
+	net.load_conv_2("./data/lenet_weights/conv2.txt");
+	net.load_fc_1("./data/lenet_weights/fc1.txt");
+	net.load_fc_2("./data/lenet_weights/fc2.txt");
+
+	string filename = "./data/lenet_data/1_new.txt";
+	if (argc == 2){
+		filename = "./data/lenet_data/"+string(argv[1]);
+		cout << "Running on file: " << filename << endl;
+	}
+	else if(argc == 3){
+		filename = "./data/lenet_data/"+string(argv[1]);
+		cout << "Running on file: " << filename << endl;
+		net.mult = strtol(argv[2],nullptr,0);
+	}
+	else{
+		cout << "Incorrect Number of arguments" << endl;
+		cout << "Syntax: ./bin/lenet file.txt [mult]" << endl; 
+	}
+
+	vector<float> out = net.run(filename, 1, 28, 28);
 	vector<pair<float, int> > probab(out.size());
+
 	for (int i=0; i<out.size(); i++){
 		probab[i] = make_pair(out[i], i);
 	}
 	sort(probab.begin(), probab.end());
 	reverse(probab.begin(), probab.end());
-	cout << "Top 5 softmax probabilities are: " << endl;
+
+	
+	// if (mkdir("data/lenet_data/lenet_output/", 0777) == -1){
+	// 	cerr << "Error : " << strerror(errno) << endl;
+	// }
+	// else{
+	// 	cout << "LeNet output Directory created"<< endl; 
+	// }
+	
+	// cout<< "Running" << endl;
+
+    // ofstream outfile;
+    // outfile.open("./data/lenet_data/lenet_output/output.txt",ios::out);
+	// cout << "Top 5 softmax probabilities are: " << endl;
 	for (int i=0; i<5; i++){
 		cout << "Class " << probab[i].second << ": " << probab[i].first*100 << endl;
+		// outfile << probab[i].second << ": " << probab[i].first*100 << endl;
 	}
+	cout << "Predicted output is: " << probab[0].second << endl;
 }

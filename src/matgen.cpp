@@ -1,6 +1,6 @@
 #include <iostream>
-#include <bits/stdc++.h> 
-#include <sys/stat.h> 
+#include <bits/stdc++.h>
+#include <sys/stat.h>
 #include <sys/types.h> 
 #include <fstream>
 #include <string>

@@ -202,7 +202,7 @@ Matrix conv_pad(Matrix mat, Matrix ker, int n, int m, int p, int s /*= 1*/){
             int sum = 0;
             for(int k = 0; k < m; k++){
                 for(int l = 0; l < m; l++){
-                    sum = sum + padimage[i*s+k][j*s+l] * ker[m-k-1][m-l-1];
+                    sum = sum + padimage[i*s+k][j*s+l] * ker[k][l];
                 }
             }
             ans[i][j] = sum;
