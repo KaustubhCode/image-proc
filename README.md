@@ -1,6 +1,6 @@
 # Image Processing Library
 
-Image processing library with functions (in src/imgOp) like convolution with a kernel, applying average pooling or max pooling to an image and applying relu, tanh, softmax and sigmoid functions on each pixel value of the image. Convolution has been implemented by matrix multiplication also using three methods - Intel MKL, OpenBLAS and using pthreads. 
+Image processing library with functions (in src/imgOp) like convolution with a kernel, applying average pooling or max pooling to an image and applying relu, tanh, softmax and sigmoid functions on each pixel value of the image. Convolution has been implemented by matrix multiplication also using three methods - Intel MKL, OpenBLAS and using pthreads. Then it uses the image processing library to construct a Convolutional Neural Network called *LeNet*. 
 *Note: This library assumes square matrix input.*
 
 ## Description
@@ -11,6 +11,8 @@ Description of each file in `/src`:
 - `matgen.cpp` - Creates 10 matrices of sizes from range 10 to `mat_size` with random integer elements from range `-range` to `+range` with `step`. All these matrices are stored in the `./data/matrix` folder.
 - `evaluator.cpp` - Evaluated all the matrices in the `./data/matrix` for convolution using matrix multiplication using kernels from `./data/ker`. It stores the time in the evaluation inside `./data/mean`. First column is time and second column is matrix size n.
 - `mean.cpp` -  Calculates mean and standard deviations of times (for each size) and stores them in `./data/mean_sd` respectively. First column has matrix size n, second is mean & third is standard deviation.
+- `preprocess.py` - Processes an image to required format so that it can be taken as input from lenet.cpp. (Change the argument of input from within this file)
+- `lenet.cpp` -  Takes preprocessed image from `./data/lenet_data` and applies the convolutional neural netowrk as in this paper [1] to find out top 5 softmax predictions and to predict the digit on the image. 
 
 ## Getting Started
 
@@ -42,12 +44,18 @@ Description of each file in `/src`:
   ``` $ ./bin/evaluate ```
 - For calculating time & standard deviation from './data/time/' use:
   ``` $ ./bin/mean ```
+- For processing input use:
+  ``` $ python3 ./src/preprocess.py```
+- For applying LeNet use:
+  ``` $ ./bin/lenet [file1.txt] [mult] ```
 
 ### Notes
 
 - The input files have matrices given in column order with each value in different line. See example files for a sample matrix.
 - It is assumed that input size given will be correct. If not it will either add extra zeros to matrix (if input size is more) or exclude some part of the matrix (if input size is less, it will take into account the matrix formed by the first input_size * input_size lines) 
 - {} represents optional arguments for that operation. Default stride set to 1.
+- Kernel matrices have not been inverted during convolution.
+- All data needs to be stored in the respective subfolders of the `/data` folder. 
 
 ### Running operations - with examples
 1. Convolution with padding 
