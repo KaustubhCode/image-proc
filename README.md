@@ -1,6 +1,6 @@
 # Image Processing Library
 
-Image processing library with functions (in src/imgOp) like convolution with a kernel, applying average pooling or max pooling to an image and applying relu, tanh, softmax and sigmoid functions on each pixel value of the image. Convolution has been implemented by matrix multiplication also using three methods - Intel MKL, OpenBLAS and using pthreads. Then it uses the image processing library to construct a Convolutional Neural Network called *LeNet*. 
+Image processing library with functions (in src/imgOp) like convolution with a kernel, applying average pooling or max pooling to an image and applying relu, tanh, softmax and sigmoid functions on each pixel value of the image. Convolution has been implemented by matrix multiplication also using three methods - Intel MKL, OpenBLAS and using pthreads. Then it uses the image processing library to construct a Convolutional Neural Network called **LeNet** [1]. 
 *Note: This library assumes square matrix input.*
 
 ## Description
@@ -12,7 +12,7 @@ Description of each file in `/src`:
 - `evaluator.cpp` - Evaluated all the matrices in the `./data/matrix` for convolution using matrix multiplication using kernels from `./data/ker`. It stores the time in the evaluation inside `./data/mean`. First column is time and second column is matrix size n.
 - `mean.cpp` -  Calculates mean and standard deviations of times (for each size) and stores them in `./data/mean_sd` respectively. First column has matrix size n, second is mean & third is standard deviation.
 - `preprocess.py` - Processes an image to required format so that it can be taken as input from lenet.cpp. (Change the argument of input from within this file)
-- `lenet.cpp` -  Takes preprocessed image from `./data/lenet_data` and applies the convolutional neural netowrk as in this paper [1] to find out top 5 softmax predictions and to predict the digit on the image. 
+- `lenet.cpp` -  Takes preprocessed image from `./data/lenet_data` and applies the convolutional neural network as in this paper [1] to find out top 5 softmax predictions and to predict the digit on the image. 
 
 ## Getting Started
 
@@ -169,3 +169,7 @@ Example Command
 * **Kaustubh Prakash** - 2016MT10647
 * **Abhay Saxena** - 2016MT60648
 
+## References
+
+[1] Y. LeCun, L. Bottou, Y. Bengio, and P. Haffner, “Gradient-based learning applied to
+document recognition,” in Intelligent Signal Processing, pp. 306–351, IEEE Press, 2001.
