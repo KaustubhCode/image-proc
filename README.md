@@ -11,7 +11,7 @@ Description of each file in `/src`:
 - `matgen.cpp` - Creates 10 matrices of sizes from range 10 to `mat_size` with random integer elements from range `-range` to `+range` with `step`. All these matrices are stored in the `./data/matrix` folder.
 - `evaluator.cpp` - Evaluated all the matrices in the `./data/matrix` for convolution using matrix multiplication using kernels from `./data/ker`. It stores the time in the evaluation inside `./data/mean`. First column is time and second column is matrix size n.
 - `mean.cpp` -  Calculates mean and standard deviations of times (for each size) and stores them in `./data/mean_sd` respectively. First column has matrix size n, second is mean & third is standard deviation.
-- `preprocess.py` - Processes an image to required format so that it can be taken as input from lenet.cpp. (Change the argument of input from within this file)
+- `preprocess.py` - Processes an image to required format so that it can be taken as input from lenet.cpp. (Change the argument of input from within this file) and stores it in `./data/lenet_data`
 - `lenet.cpp` -  Takes preprocessed image from `./data/lenet_data` and applies the convolutional neural network as in this paper [1] to find out top 5 softmax predictions and to predict the digit on the image. 
 
 ## Getting Started
@@ -25,11 +25,13 @@ Description of each file in `/src`:
   $ sudo apt-get update 
   ```
 - Intel MKL library (for matrix multiplication)
-  - Download library from Intel mkl site.
+  - Download library from Intel mkl site. [2]
   - Link it using (Change  `/opt/intel` if intel library not downloaded in `/opt`)
     > . /opt/intel/mkl/bin/mklvars.sh intel64 #for setting env variable for intel mkl
-- OpenBLAS library
+- OpenBLAS library [3]
   > $ sudo apt-get install libopenblas-dev #for installing openBLAS
+- Install opencv for preprocessing
+  > $ sudo pip install opencv-python
   
 ### How to run
 
@@ -173,3 +175,5 @@ Example Command
 
 [1] Y. LeCun, L. Bottou, Y. Bengio, and P. Haffner, “Gradient-based learning applied to
 document recognition,” in Intelligent Signal Processing, pp. 306–351, IEEE Press, 2001.
+[2] Intel, “Intel math kernel library.” Available at https://software.intel.com/en-us/mkl.
+[3] OpenBLAS, “Openblas library.” Available at https://www.openblas.net/.
