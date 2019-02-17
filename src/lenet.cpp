@@ -16,60 +16,6 @@ typedef vector<float> Array;
 typedef vector<Array> Matrix;
 typedef vector<Matrix> Feature;
 typedef vector<Feature> FList;
- 
-Matrix conv3d(Feature input, Feature ker, int pad, int stride, int mult=1){
-	int n = input[0].size();
-	int newsz = ((n - ker[0].size() + 2*pad)/stride) + 1;
-	Matrix output(newsz,Array(newsz));
-	for (int i = 0; i < input.size();i++){
-		Matrix out = conv_mult_pad(input[i],ker[i],n,ker[0].size(),pad,stride,mult);
-		for (int j = 0; j < newsz; j++){
-			for (int k = 0; k < newsz; k++){
-				output[j][k] = output[j][k] + out[j][k];
-			}
-		}
-	}
-	return output;
-}
-
-Matrix bias(Matrix input, float b){
-	int n = input.size();
-	Matrix output(n,Array(n));
-	for (int j = 0; j < n; j++){
-		for (int k = 0; k < n; k++){
-			output[j][k] = input[j][k] + b;
-		}
-	}
-	return output;
-}
-
-Feature relu3d(Feature input){
-	int n = input[0].size();
-	Feature output(input.size(),Matrix(n,Array(n)));
-	for (int i = 0; i < input.size();i++){
-		for (int j = 0; j < n; j++){
-			for (int k = 0; k < n; k++){
-				if (input[i][j][k] <= 0){
-					output[i][j][k] = 0;
-				}
-				else{
-					output[i][j][k] = input[i][j][k];
-				}
-			}
-		}
-	}
-	return output;
-}
-
-Feature maxpool3d(Feature input, int kernel, int stride){
-	int n = input[0].size();
-	int newsz = (n-kernel)/stride + 1;
-	Feature output(input.size(),Matrix(newsz,Array(newsz)));
-	for (int i = 0; i < input.size();i++){
-		output[i] = maxPooling(input[i],n,kernel,stride);
-	}
-	return output;
-}
 
 class lenet{
 	public:

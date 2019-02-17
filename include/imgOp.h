@@ -7,6 +7,7 @@ using namespace std;
 
 typedef vector<float> Array;
 typedef vector<Array> Matrix;
+typedef vector<Matrix> Feature;
 
 // Convolution with padding
 Matrix conv_pad(Matrix mat, Matrix ker, int n, int m, int p, int s = 1);
@@ -32,5 +33,13 @@ Array softmax(Array mat, int n);
 void display(Matrix twoD);
 // Display Vector
 void display_vec(Array twoD);
+
+Matrix conv3d(Feature input, Feature ker, int pad, int stride, int mult=1);
+
+Matrix bias(Matrix input, float b);
+
+Feature relu3d(Feature input);
+
+Feature maxpool3d(Feature input, int kernel, int stride);
 
 #endif
