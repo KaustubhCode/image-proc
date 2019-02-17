@@ -333,7 +333,10 @@ int main(int argc, char** argv){
 	net.load_fc_2("./data/lenet_weights/fc2.txt");
 
 	string filename = "./data/lenet_data/1_new.txt";
-	if (argc == 2){
+	if (argc == 1){
+		cout << "Running on file: " << filename << endl;
+	}
+	else if (argc == 2){
 		filename = "./data/lenet_data/"+string(argv[1]);
 		cout << "Running on file: " << filename << endl;
 	}
@@ -356,19 +359,9 @@ int main(int argc, char** argv){
 	sort(probab.begin(), probab.end());
 	reverse(probab.begin(), probab.end());
 
-	
-	// if (mkdir("data/lenet_data/lenet_output/", 0777) == -1){
-	// 	cerr << "Error : " << strerror(errno) << endl;
-	// }
-	// else{
-	// 	cout << "LeNet output Directory created"<< endl; 
-	// }
-	
-	// cout<< "Running" << endl;
-
     // ofstream outfile;
     // outfile.open("./data/lenet_data/lenet_output/output.txt",ios::out);
-	// cout << "Top 5 softmax probabilities are: " << endl;
+	cout << "Top 5 softmax probabilities are: " << endl;
 	for (int i=0; i<5; i++){
 		cout << "Class " << probab[i].second << ": " << probab[i].first*100 << endl;
 		// outfile << probab[i].second << ": " << probab[i].first*100 << endl;
