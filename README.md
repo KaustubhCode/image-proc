@@ -175,5 +175,7 @@ Example Command
 
 [1] Y. LeCun, L. Bottou, Y. Bengio, and P. Haffner, “Gradient-based learning applied to
 document recognition,” in Intelligent Signal Processing, pp. 306–351, IEEE Press, 2001.
+
 [2] Intel, “Intel math kernel library.” Available at https://software.intel.com/en-us/mkl.
+
 [3] OpenBLAS, “Openblas library.” Available at https://www.openblas.net/.
